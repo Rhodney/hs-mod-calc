@@ -1,0 +1,24 @@
+{
+  "name": "hades-site",
+  "version": "1.0.0",
+  "description": "Site for Hades Star game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/gulp -f build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joxter/hades-site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joxter/hades-site/issues"
+  },
+  "homepage": "https://github.com/Joxter/hades-site#readme",
+  "dependencies": {
+    "gulp": "^4.0.0",
+    "gulp-pug": "^4.0.1"
+  }
+}
