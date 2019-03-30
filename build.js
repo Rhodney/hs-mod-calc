@@ -1,5 +1,5 @@
 const gulp = require("gulp");
-var pug = require("gulp-pug");
+const pug = require("gulp-pug");
 
 function buildHTML() {
   return gulp
