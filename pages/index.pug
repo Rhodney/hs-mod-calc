@@ -1,8 +1,16 @@
 doctype html  
 html(lang='en')  
- head
-   title Pug
- body
-   h1 Pug Examples
-   div.container
-     p Cool Pug example!
+  head
+    title Pug
+    style
+      include style.css
+  body
+    div.layout
+      header.layout__header
+        p Some header
+      main.layout__main
+        h1 Hades modules calculator
+      footer.layout__footer
+        p @Joxter was here!
+  script
+    include script.js

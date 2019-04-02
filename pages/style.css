@@ -1,0 +1,24 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.layout__header,
+.layout__footer {
+    flex-shrink: 0;
+}
+
+.layout__main {
+    flex-grow: 1;
+}
+
