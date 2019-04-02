@@ -10,7 +10,7 @@ function buildHTML() {
         data: {
           insertData: "insert string",
           css: "class-name",
-          modules: ["cargo", "batery"]
+          modules: ["cargoBayExtension", "shipmentComputer"]
         }
       })
     )
