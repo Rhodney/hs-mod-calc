@@ -1,5 +1,3 @@
-const modules_data = window.modules_data;
-
 const currentModules = document.querySelector(".current-modules");
 const targetModules = document.querySelector(".target-modules");
 
@@ -9,24 +7,23 @@ const UserSelect = {
 };
 
 function getSumFirst(arr, n) {
-  return arr.filter((item, i) => i < n).reduce((acc, item) => acc + item, 0);
+  return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
 }
 
 function renderResult() {
   const result = document.querySelector(".result");
 
-  let hours = 0;
+  let term = 0;
   let money = 0;
-  console.log("renderResult");
 
   Object.keys(UserSelect.target).forEach(modName => {
     const currentPrice = getSumFirst(
-      modules_data[modName].prices,
+      modulesData[modName].prices,
       UserSelect.current[modName]
     );
 
     const targetPrice = getSumFirst(
-      modules_data[modName].prices,
+      modulesData[modName].prices,
       UserSelect.target[modName]
     );
 
@@ -35,21 +32,25 @@ function renderResult() {
     }
 
     const currentTerm = getSumFirst(
-      modules_data[modName].term,
+      modulesData[modName].term.map(termItem => parseTerm(termItem)),
       UserSelect.current[modName]
     );
 
     const targetTerm = getSumFirst(
-      modules_data[modName].term,
+      modulesData[modName].term.map(termItem => parseTerm(termItem)),
       UserSelect.target[modName]
     );
 
     if (targetTerm > currentTerm) {
-      hours += targetTerm - currentTerm;
+      term += targetTerm - currentTerm;
     }
   });
 
-  result.innerHTML = `hours ${hours}, money ${money}`;
+  const moneyPerDay = money && term ? Math.floor((money / term) * 24 * 60) : 0;
+
+  result.innerHTML = `term ${stringifyTerm(
+    term
+  )}, money ${money} (${moneyPerDay} money/day)`;
 }
 
 initButtons(currentModules, "current");
@@ -59,8 +60,8 @@ function initButtons(modulesDiv, section /*  current / target */) {
   modulesDiv.querySelectorAll("button").forEach(btn => {
     const moduleName = btn.className;
 
-    if (modules_data[moduleName]) {
-      const data = modules_data[moduleName];
+    if (modulesData[moduleName]) {
+      const data = modulesData[moduleName];
 
       btn.innerHTML =
         data.name + " " + (UserSelect[section][moduleName] || "NO");
@@ -73,7 +74,7 @@ function initButtons(modulesDiv, section /*  current / target */) {
         }
         if (
           UserSelect[section][moduleName] >
-          modules_data[moduleName].prices.length
+          modulesData[moduleName].prices.length
         ) {
           UserSelect[section][moduleName] = 0;
         }
@@ -87,4 +88,46 @@ function initButtons(modulesDiv, section /*  current / target */) {
       console.log(`there are no module this name: ${moduleName}`);
     }
   });
+}
+
+function parseTerm(term /* 4h / 2d / 5m */) {
+  try {
+    const [, number, period] = term.match(/(\d+)([hdm])/);
+
+    if (period === `m`) {
+      return +number;
+    }
+    if (period === `h`) {
+      return +number * 60;
+    }
+    if (period === `d`) {
+      return +number * 60 * 24;
+    }
+  } catch (e) {
+    throw new Error(`Term must be like '4h' or '2d', not: ${term}`);
+  }
+}
+
+function stringifyTerm(term /* 600 */) {
+  const days = Math.floor(term / (24 * 60));
+  const hours = Math.floor((term - days * 24 * 60) / 60);
+  const mins = term - days * 24 * 60 - hours * 60;
+
+  let result = ``;
+
+  if (days) {
+    result += days + `d`;
+  }
+
+  if (hours) {
+    result += hours + `h`;
+  }
+
+  if (mins) {
+    result += mins + `m`;
+  }
+
+  console.log(term, result);
+
+  return result;
 }

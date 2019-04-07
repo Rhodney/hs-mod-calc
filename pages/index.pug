@@ -4,37 +4,58 @@ html(lang='en')
     title Pug
     style
       include style.css
-    script
-      include moduleData.js
   body
-    div
-      include data.pug
 
+    p Result:&nbsp;
+      span.result
     div(style='display:flex')
 
       .current-modules(style='width: 200px;')
         p Trade modules
-           each item in modules
+           each module in tradeModules
               p
-                button(class=modules_data[item].id)= modules_data[item].name
+                button(class=module.id)= module.name
+        p Mining modules
+           each module in miningModules
+              p
+                button(class=module.id)= module.name
+        p Weapon modules
+           each module in weaponModules
+              p
+                button(class=module.id)= module.name
+        p Shield modules
+           each module in shieldModules
+              p
+                button(class=module.id)= module.name
+        p Support modules
+           each module in supportModules
+              p
+                button(class=module.id)= module.name
 
-        p
-          button.cargo cargo
-        p
-          button.comp shipment comp
-        p Atack modules
-        p
-          button.batery batery
       .target-modules
         p Trade modules
-        p
-          button.cargo cargo
-        p
-          button.comp shipment comp
-        p Atack modules
-        p
-          button.batery batery
-    p.result
+           each module in tradeModules
+              p
+                button(class=module.id)= module.name
+        p Mining modules
+           each module in miningModules
+              p
+                button(class=module.id)= module.name
+        p Weapon modules
+           each module in weaponModules
+              p
+                button(class=module.id)= module.name
+        p Shield modules
+           each module in shieldModules
+              p
+                button(class=module.id)= module.name
+        p Support modules
+           each module in supportModules
+              p
+                button(class=module.id)= module.name
+
     p(class=css) #{insertData}
+  script
+    include moduleData.js
   script
     include script.js

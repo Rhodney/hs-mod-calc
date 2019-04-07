@@ -1,4 +1,4 @@
-window.modules_data = {
+var modulesData = {
   cargoBayExtension: {
     id: "cargoBayExtension",
     name: "Cargo Bay Extension",
@@ -414,7 +414,7 @@ window.modules_data = {
     term: ["12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d", "7d", "7d"]
   },
 
-  Barrage: {
+  barrage: {
     id: "barrage",
     name: "Barrage",
     prices: [
@@ -930,3 +930,73 @@ window.modules_data = {
     term: ["3d", "4d", "5d", "6d", "7d", "8d", "9d", "10d", "10d", "10d"]
   }
 };
+
+var modulesByTypes = {
+  trade: [
+    "cargoBayExtension",
+    "shipmentComputer",
+    "rush",
+    "tradeBurst",
+    "shipmentDrone",
+    "offload",
+    "shipmentBeam",
+    "entrust",
+    "dispatch",
+    "recall"
+  ],
+  mining: [
+    "miningBoost",
+    "hydrogenBayExtension",
+    "enrich",
+    "remoteMining",
+    "hydrogenUpload",
+    "miningUnity",
+    "crunch",
+    "genesis",
+    "miningDrone"
+  ],
+  weapon: [
+    "weakBattery",
+    "battery",
+    "laser",
+    "massBattery",
+    "dualLaser",
+    "barrage",
+    "dartLauncher"
+  ],
+  shield: [
+    "alphaShield",
+    "deltaShield",
+    "passiveShield",
+    "omegaShield",
+    "mirrorShield",
+    "blastShield",
+    "areaShield"
+  ],
+  support: [
+    "emp",
+    "teleport",
+    "redStarLifeExtender",
+    "remoteRepair",
+    "timeWarp",
+    "unity",
+    "sanctuary",
+    "stealth",
+    "fortify",
+    "impulse",
+    "alphaRocket",
+    "salvage",
+    "suppress",
+    "destiny",
+    "barrier",
+    "vengeance",
+    "deltaRocket",
+    "leap",
+    "bond",
+    "alphaDrone",
+    "omegaRocket"
+  ]
+};
+
+exports.modulesData = modulesData;
+exports.modulesByTypes = modulesByTypes;
