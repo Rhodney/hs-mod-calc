@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .layout {
@@ -22,3 +23,9 @@ body {
     flex-grow: 1;
 }
 
+
+.module {
+    display: block;
+    width: 30px;
+    height: 30px;
+}

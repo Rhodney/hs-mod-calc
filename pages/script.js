@@ -6,6 +6,9 @@ const UserSelect = {
   target: {}
 };
 
+initButtons(currentModules, "current");
+initButtons(targetModules, "target");
+
 function getSumFirst(arr, n) {
   return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
 }
@@ -52,9 +55,6 @@ function renderResult() {
     term
   )}, money ${money} (${moneyPerDay} money/day)`;
 }
-
-initButtons(currentModules, "current");
-initButtons(targetModules, "target");
 
 function initButtons(modulesDiv, section /*  current / target */) {
   modulesDiv.querySelectorAll("button").forEach(btn => {

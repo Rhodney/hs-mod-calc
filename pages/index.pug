@@ -1,7 +1,12 @@
+mixin module(data)
+  p
+    button(class=data.id)= data.name
+
 doctype html
 html(lang='en')
   head
     title Pug
+    meta(name="viewport" content="width=device-width, initial-scale=1")/
     style
       include style.css
   body
@@ -12,49 +17,46 @@ html(lang='en')
 
       .current-modules(style='width: 200px;')
         p Trade modules
-           each module in tradeModules
-              p
-                button(class=module.id)= module.name
+           each moduleData in tradeModules
+              +module(moduleData)
+
         p Mining modules
-           each module in miningModules
-              p
-                button(class=module.id)= module.name
+           each moduleData  in miningModules
+              +module(moduleData)
+
         p Weapon modules
-           each module in weaponModules
-              p
-                button(class=module.id)= module.name
+           each moduleData  in weaponModules
+              +module(moduleData)
+
         p Shield modules
-           each module in shieldModules
-              p
-                button(class=module.id)= module.name
+           each moduleData  in shieldModules
+              +module(moduleData)
+
         p Support modules
-           each module in supportModules
-              p
-                button(class=module.id)= module.name
+           each moduleData  in supportModules
+              +module(moduleData)
 
       .target-modules
         p Trade modules
-           each module in tradeModules
-              p
-                button(class=module.id)= module.name
-        p Mining modules
-           each module in miningModules
-              p
-                button(class=module.id)= module.name
-        p Weapon modules
-           each module in weaponModules
-              p
-                button(class=module.id)= module.name
-        p Shield modules
-           each module in shieldModules
-              p
-                button(class=module.id)= module.name
-        p Support modules
-           each module in supportModules
-              p
-                button(class=module.id)= module.name
+           each moduleData in tradeModules
+              +module(moduleData)
 
-    p(class=css) #{insertData}
+        p Mining modules
+           each moduleData  in miningModules
+              +module(moduleData)
+
+        p Weapon modules
+           each moduleData  in weaponModules
+              +module(moduleData)
+
+        p Shield modules
+           each moduleData  in shieldModules
+              +module(moduleData)
+
+        p Support modules
+           each moduleData  in supportModules
+              +module(moduleData)
+
   script
     include moduleData.js
   script

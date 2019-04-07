@@ -14,8 +14,6 @@ function buildHTML() {
       pug({
         pretty: true,
         data: {
-          insertData: "insert string",
-          css: "class-name",
           tradeModules: getModuleByType(modulesData, modulesByTypes.trade),
           miningModules: getModuleByType(modulesData, modulesByTypes.mining),
           weaponModules: getModuleByType(modulesData, modulesByTypes.weapon),
