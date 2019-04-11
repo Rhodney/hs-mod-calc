@@ -1,6 +1,5 @@
 mixin module(data)
-  p
-    button(class=data.id)= data.name
+  button.module.modules-pack__item(data-module-id=data.id, data-current-l=0 data-target-l=0)= data.name
 
 doctype html
 html(lang='en')
@@ -10,52 +9,41 @@ html(lang='en')
     style
       include style.css
   body
+    header
+      p Result:&nbsp;
+        span.result
 
-    p Result:&nbsp;
-      span.result
-    div(style='display:flex')
+      div.mode-toggle
+        label current
+          input(type="radio", name="mode" value="current" checked)
+        label target
+          input(type="radio", name="mode" value="target")
 
-      .current-modules(style='width: 200px;')
-        p Trade modules
-           each moduleData in tradeModules
-              +module(moduleData)
+    .modules
+      h2 Trade modules
+      section.modules-pack
+        each moduleData in tradeModules
+          +module(moduleData)
 
-        p Mining modules
-           each moduleData  in miningModules
-              +module(moduleData)
+      h2 Mining modules
+      section.modules-pack
+        each moduleData  in miningModules
+          +module(moduleData)
 
-        p Weapon modules
-           each moduleData  in weaponModules
-              +module(moduleData)
+      h2 Weapon modules
+      section.modules-pack
+        each moduleData  in weaponModules
+          +module(moduleData)
 
-        p Shield modules
-           each moduleData  in shieldModules
-              +module(moduleData)
+      h2 Shield modules
+      section.modules-pack
+        each moduleData  in shieldModules
+          +module(moduleData)
 
-        p Support modules
-           each moduleData  in supportModules
-              +module(moduleData)
-
-      .target-modules
-        p Trade modules
-           each moduleData in tradeModules
-              +module(moduleData)
-
-        p Mining modules
-           each moduleData  in miningModules
-              +module(moduleData)
-
-        p Weapon modules
-           each moduleData  in weaponModules
-              +module(moduleData)
-
-        p Shield modules
-           each moduleData  in shieldModules
-              +module(moduleData)
-
-        p Support modules
-           each moduleData  in supportModules
-              +module(moduleData)
+      h2 Support modules
+      section.modules-pack
+        each moduleData  in supportModules
+          +module(moduleData)
 
   script
     include moduleData.js

@@ -1,13 +1,14 @@
-const currentModules = document.querySelector(".current-modules");
-const targetModules = document.querySelector(".target-modules");
+const modules = document.querySelector(".modules");
+const modeToggle = document.querySelector(".mode-toggle");
 
 const UserSelect = {
   current: {},
-  target: {}
+  target: {},
+  mode: `current`
 };
 
-initButtons(currentModules, "current");
-initButtons(targetModules, "target");
+initButtons(modules);
+initToggler(modeToggle);
 
 function getSumFirst(arr, n) {
   return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
@@ -56,17 +57,16 @@ function renderResult() {
   )}, money ${money} (${moneyPerDay} money/day)`;
 }
 
-function initButtons(modulesDiv, section /*  current / target */) {
+function initButtons(modulesDiv) {
   modulesDiv.querySelectorAll("button").forEach(btn => {
-    const moduleName = btn.className;
+    const moduleName = btn.dataset.moduleId;
 
     if (modulesData[moduleName]) {
       const data = modulesData[moduleName];
 
-      btn.innerHTML =
-        data.name + " " + (UserSelect[section][moduleName] || "NO");
-
       btn.addEventListener("click", () => {
+        const section = UserSelect.mode;
+
         if (UserSelect[section][moduleName]) {
           UserSelect[section][moduleName]++;
         } else {
@@ -79,8 +79,11 @@ function initButtons(modulesDiv, section /*  current / target */) {
           UserSelect[section][moduleName] = 0;
         }
 
-        btn.innerHTML =
-          data.name + " " + (UserSelect[section][moduleName] || "NO");
+        if (section === `current`) {
+          btn.dataset.currentL = UserSelect[section][moduleName];
+        } else {
+          btn.dataset.targetL = UserSelect[section][moduleName];
+        }
 
         renderResult();
       });
@@ -130,4 +133,16 @@ function stringifyTerm(term /* 600 */) {
   console.log(term, result);
 
   return result;
+}
+
+function initToggler(elem) {
+  elem.addEventListener("change", event => {
+    UserSelect.mode = event.target.value;
+  });
+
+  const checkedElem = elem.querySelector("input:checked");
+
+  if (checkedElem) {
+    UserSelect.mode = checkedElem.value;
+  }
 }
