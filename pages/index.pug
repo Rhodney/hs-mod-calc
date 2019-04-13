@@ -1,5 +1,5 @@
 mixin module(data)
-  - var bg = "background-image: url('../pages/modules/" + data.id + ".png"
+  - var bg = "background-image: url('../pages/modules/" + data.id + ".png')"
   div.modules-pack__item
     button.module(
       data-module-id=data.id,
@@ -11,7 +11,7 @@ mixin module(data)
 doctype html
 html(lang='en')
   head
-    title Pug
+    title Hades Star Module Calculator
     meta(name="viewport" content="width=device-width, initial-scale=1")/
     style
       include style.css
@@ -52,7 +52,4 @@ html(lang='en')
         each moduleData  in supportModules
           +module(moduleData)
 
-  script
-    include moduleData.js
-  script
-    include script.js
+  script(src='script.js')

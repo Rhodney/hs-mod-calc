@@ -997,7 +997,8 @@ var modulesByTypes = {
     "omegaRocket"
   ]
 };
-try {
-  exports.modulesData = modulesData;
-  exports.modulesByTypes = modulesByTypes;
-} catch (e) {}
+
+module.exports = {
+  modulesData,
+  modulesByTypes
+};

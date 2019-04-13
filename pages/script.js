@@ -1,3 +1,6 @@
+const modulesData = require("./moduleData").modulesData;
+const modulesByTypes = require("./moduleData").modulesByTypes;
+
 const modules = document.querySelector(".modules");
 const modeToggle = document.querySelector(".mode-toggle");
 
