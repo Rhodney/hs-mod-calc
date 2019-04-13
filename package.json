@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/.bin/parcel pages/index.pug",
-    "prod": "./node_modules/.bin/parcel build pages/index.pug"
+    "prod": "./node_modules/.bin/parcel build pages/index.pug --public-url ./"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/Joxter/hades-site#readme",
   "dependencies": {
-    "parcel-bundler": "^1.12.3",
-    "serve": "^11.0.0"
+    "parcel-bundler": "^1.12.3"
+  },
+  "devDependencies": {
+    "pug": "^2.0.3"
   }
 }
