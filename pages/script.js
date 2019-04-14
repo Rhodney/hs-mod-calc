@@ -1,9 +1,30 @@
 const modulesData = require("./moduleData").modulesData;
-const modulesByTypes = require("./moduleData").modulesByTypes;
+const allModuleKeys = require("./moduleData").allModuleKeys;
+const parseModules = require("./urlModules").parseModules;
+const stringifyModules = require("./urlModules").stringifyModules;
 
 const modules = document.querySelector(".modules");
 const modeToggle = document.querySelector(".mode-toggle");
 
+/*
+console.log(parseModules(allModuleKeys, "0123456789A"));
+console.log(
+  stringifyModules(allModuleKeys, {
+    cargoBayExtension: 0,
+    shipmentComputer: 1,
+    rush: 2,
+    tradeBurst: 3,
+    shipmentDrone: 4,
+    offload: 5,
+    shipmentBeam: 6,
+    entrust: 7,
+    dispatch: 8,
+    recall: 9,
+    miningBoost: 10,
+    crunch: 6
+  })
+);
+ */
 const UserSelect = {
   current: {},
   target: {},
@@ -132,8 +153,6 @@ function stringifyTerm(term /* 600 */) {
   if (mins) {
     result += mins + `m`;
   }
-
-  console.log(term, result);
 
   return result;
 }

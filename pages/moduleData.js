@@ -998,7 +998,16 @@ var modulesByTypes = {
   ]
 };
 
+const allModuleKeys = [
+  ...modulesByTypes.trade,
+  ...modulesByTypes.mining,
+  ...modulesByTypes.weapon,
+  ...modulesByTypes.shield,
+  ...modulesByTypes.support
+];
+
 module.exports = {
   modulesData,
+  allModuleKeys,
   modulesByTypes
 };
