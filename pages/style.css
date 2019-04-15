@@ -68,7 +68,6 @@ header {
     align-items: center;
     position: absolute;
     bottom: -3px;
-    z-index: 1;
     background: #fff;
     font-size: 10px;
     border-radius: 50%;

@@ -33,6 +33,23 @@ var modulesData = {
     ],
     term: ["4h", "8h", "1d", "2d", "3d", "4d", "5d", "6d", "7d", "8d"]
   },
+  tradeBoost: {
+    id: "tradeBoost",
+    name: "Trade Boost",
+    prices: [
+      15000,
+      25000,
+      50000,
+      100000,
+      200000,
+      350000,
+      550000,
+      800000,
+      2000000,
+      5000000
+    ],
+    term: ["8h", "16h", "1d", "2d", "3d", "4d", "5d", "6d", "7d", "7d"]
+  },
   rush: {
     id: "rush",
     name: "Rush",
@@ -935,6 +952,7 @@ var modulesByTypes = {
   trade: [
     "cargoBayExtension",
     "shipmentComputer",
+    "tradeBoost",
     "rush",
     "tradeBurst",
     "shipmentDrone",
