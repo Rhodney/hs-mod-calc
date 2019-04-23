@@ -72,7 +72,7 @@ export function deleteCookie(name) {
   });
 }
 
-function parseQueryString(query) {
+export function parseQueryString(query) {
   var vars = query.split("&");
   var params = {};
 

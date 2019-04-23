@@ -2,37 +2,58 @@ const modulesData = require("./moduleData").modulesData;
 const allModuleKeys = require("./moduleData").allModuleKeys;
 const parseModules = require("./urlModules").parseModules;
 const stringifyModules = require("./urlModules").stringifyModules;
+const parseQueryString = require("./urlModules").parseQueryString;
 
 const modules = document.querySelector(".modules");
 const modeToggle = document.querySelector(".mode-toggle");
+const saveBtn = document.querySelector(".save-btn");
+const resetBtn = document.querySelector(".reset-btn");
+const URL_RAPAM = "cm";
 
-/*
-console.log(parseModules(allModuleKeys, "0123456789A"));
-console.log(
-  stringifyModules(allModuleKeys, {
-    cargoBayExtension: 0,
-    shipmentComputer: 1,
-    rush: 2,
-    tradeBurst: 3,
-    shipmentDrone: 4,
-    offload: 5,
-    shipmentBeam: 6,
-    entrust: 7,
-    dispatch: 8,
-    recall: 9,
-    miningBoost: 10,
-    crunch: 6
-  })
-);
- */
 const UserSelect = {
-  current: {},
+  current: getInitCurrentModules(),
   target: {},
   mode: `current`
 };
 
 initButtons(modules);
 initToggler(modeToggle);
+initSaveButton(saveBtn);
+initResetButton(resetBtn);
+
+function getInitCurrentModules() {
+  if (location.search) {
+    const moduleStr = parseQueryString(location.search.slice(1))[URL_RAPAM];
+
+    if (moduleStr) {
+      return parseModules(allModuleKeys, moduleStr);
+    }
+  }
+
+  return {};
+}
+
+function initSaveButton(button) {
+  button.addEventListener("click", () => {
+    const str = stringifyModules(allModuleKeys, UserSelect.current);
+    const newUrl = `${location.pathname}?${URL_RAPAM}=${str}`;
+
+    window.history.pushState("", "", newUrl);
+  });
+}
+
+function initResetButton(button) {
+  button.addEventListener("click", () => {
+    UserSelect.current = {};
+    modules.querySelectorAll("button").forEach(btn => {
+      const moduleName = btn.dataset.moduleId;
+
+      if (modulesData[moduleName]) {
+        btn.dataset.currentL = UserSelect.current[moduleName] || 0;
+      }
+    });
+  });
+}
 
 function getSumFirst(arr, n) {
   return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
@@ -86,7 +107,7 @@ function initButtons(modulesDiv) {
     const moduleName = btn.dataset.moduleId;
 
     if (modulesData[moduleName]) {
-      const data = modulesData[moduleName];
+      btn.dataset.currentL = UserSelect.current[moduleName] || 0;
 
       btn.addEventListener("click", () => {
         const section = UserSelect.mode;

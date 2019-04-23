@@ -19,12 +19,15 @@ html(lang='en')
     header
       p Result:&nbsp;
         span.result
+      div.controls
+        button.save-btn Save current to URL
+        button.reset-btn Reset current
 
       div.mode-toggle
-        label current
-          input(type="radio", name="mode" value="current" checked)
-        label target
-          input(type="radio", name="mode" value="target")
+        input(type="radio", name="mode" value="current" checked id="current-radio")
+        label(for="current-radio") current
+        input(type="radio", name="mode" value="target" id="target-radio")
+        label(for="target-radio") target
 
     .modules
       h2 Trade modules
