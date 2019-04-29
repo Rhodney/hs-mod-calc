@@ -3,6 +3,7 @@ const allModuleKeys = require("./moduleData").allModuleKeys;
 const parseModules = require("./urlModules").parseModules;
 const stringifyModules = require("./urlModules").stringifyModules;
 const parseQueryString = require("./urlModules").parseQueryString;
+const Model = require("./Model").default;
 
 const modules = document.querySelector(".modules");
 const modeToggle = document.querySelector(".mode-toggle");
@@ -11,8 +12,6 @@ const resetBtn = document.querySelector(".reset-btn");
 const URL_RAPAM = "cm";
 
 const UserSelect = {
-  current: getInitCurrentModules(),
-  target: {},
   mode: `current`
 };
 
@@ -21,21 +20,39 @@ initToggler(modeToggle);
 initSaveButton(saveBtn);
 initResetButton(resetBtn);
 
-function getInitCurrentModules() {
-  if (location.search) {
-    const moduleStr = parseQueryString(location.search.slice(1))[URL_RAPAM];
+Model.onChange(renderResult);
+Model.onChange(updateButtons);
+Model.setData(getInitCurrentModules());
 
-    if (moduleStr) {
-      return parseModules(allModuleKeys, moduleStr);
-    }
+function getInitCurrentModules() {
+  if (!location.search) {
+    return [];
   }
 
-  return {};
+  const moduleStr = parseQueryString(location.search.slice(1))[URL_RAPAM];
+
+  if (!moduleStr) {
+    return [];
+  }
+
+  const modules = parseModules(allModuleKeys, moduleStr);
+
+  const modulesData = Object.keys(modules)
+    .filter(moduleName => modules[moduleName])
+    .map(moduleName => {
+      return {
+        module: moduleName,
+        level: modules[moduleName],
+        section: `current`
+      };
+    });
+
+  return modulesData;
 }
 
 function initSaveButton(button) {
   button.addEventListener("click", () => {
-    const str = stringifyModules(allModuleKeys, UserSelect.current);
+    const str = stringifyModules(allModuleKeys, Model.getSection(`current`));
     const newUrl = `${location.pathname}?${URL_RAPAM}=${str}`;
 
     window.history.pushState("", "", newUrl);
@@ -44,14 +61,7 @@ function initSaveButton(button) {
 
 function initResetButton(button) {
   button.addEventListener("click", () => {
-    UserSelect.current = {};
-    modules.querySelectorAll("button").forEach(btn => {
-      const moduleName = btn.dataset.moduleId;
-
-      if (modulesData[moduleName]) {
-        btn.dataset.currentL = UserSelect.current[moduleName] || 0;
-      }
-    });
+    Model.reset();
   });
 }
 
@@ -59,21 +69,21 @@ function getSumFirst(arr, n) {
   return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
 }
 
-function renderResult() {
+function renderResult(newData, state) {
   const result = document.querySelector(".result");
 
   let term = 0;
   let money = 0;
 
-  Object.keys(UserSelect.target).forEach(modName => {
+  Object.keys(state.target).forEach(modName => {
     const currentPrice = getSumFirst(
       modulesData[modName].prices,
-      UserSelect.current[modName]
+      state.current[modName]
     );
 
     const targetPrice = getSumFirst(
       modulesData[modName].prices,
-      UserSelect.target[modName]
+      state.target[modName]
     );
 
     if (targetPrice > currentPrice) {
@@ -82,12 +92,12 @@ function renderResult() {
 
     const currentTerm = getSumFirst(
       modulesData[modName].term.map(termItem => parseTerm(termItem)),
-      UserSelect.current[modName]
+      state.current[modName]
     );
 
     const targetTerm = getSumFirst(
       modulesData[modName].term.map(termItem => parseTerm(termItem)),
-      UserSelect.target[modName]
+      state.target[modName]
     );
 
     if (targetTerm > currentTerm) {
@@ -96,45 +106,53 @@ function renderResult() {
   });
 
   const moneyPerDay = money && term ? Math.floor((money / term) * 24 * 60) : 0;
+  const termString = stringifyTerm(term);
 
-  result.innerHTML = `term ${stringifyTerm(
-    term
-  )}, money ${money} (${moneyPerDay} money/day)`;
+  result.innerHTML = `term ${termString}, money ${money} (${moneyPerDay} money/day)`;
+}
+
+function updateButtons(modulesData) {
+  modulesData.forEach(({ module, level, section }) => {
+    const btn = document.querySelector(`.module[data-module-id='${module}']`);
+    if (section === `current`) {
+      btn.dataset.currentL = level;
+    } else {
+      btn.dataset.targetL = level;
+    }
+  });
 }
 
 function initButtons(modulesDiv) {
   modulesDiv.querySelectorAll("button").forEach(btn => {
     const moduleName = btn.dataset.moduleId;
 
-    if (modulesData[moduleName]) {
-      btn.dataset.currentL = UserSelect.current[moduleName] || 0;
-
-      btn.addEventListener("click", () => {
-        const section = UserSelect.mode;
-
-        if (UserSelect[section][moduleName]) {
-          UserSelect[section][moduleName]++;
-        } else {
-          UserSelect[section][moduleName] = 1;
-        }
-        if (
-          UserSelect[section][moduleName] >
-          modulesData[moduleName].prices.length
-        ) {
-          UserSelect[section][moduleName] = 0;
-        }
-
-        if (section === `current`) {
-          btn.dataset.currentL = UserSelect[section][moduleName];
-        } else {
-          btn.dataset.targetL = UserSelect[section][moduleName];
-        }
-
-        renderResult();
-      });
-    } else {
+    if (!modulesData[moduleName]) {
       console.log(`there are no module this name: ${moduleName}`);
+      return;
     }
+
+    btn.addEventListener("click", () => {
+      const section = UserSelect.mode;
+      let moduleLevel = Model.getLevel({ section, module: moduleName });
+
+      if (moduleLevel) {
+        moduleLevel++;
+      } else {
+        moduleLevel = 1;
+      }
+
+      if (moduleLevel > modulesData[moduleName].prices.length) {
+        moduleLevel = 0;
+      }
+
+      Model.setData([
+        {
+          module: moduleName,
+          level: moduleLevel,
+          section
+        }
+      ]);
+    });
   });
 }
 
