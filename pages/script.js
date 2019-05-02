@@ -4,6 +4,7 @@ const parseModules = require("./urlModules").parseModules;
 const stringifyModules = require("./urlModules").stringifyModules;
 const parseQueryString = require("./urlModules").parseQueryString;
 const Model = require("./Model").default;
+const Modal = require("./Modal").default;
 
 const modules = document.querySelector(".modules");
 const modeToggle = document.querySelector(".mode-toggle");
@@ -132,26 +133,27 @@ function initButtons(modulesDiv) {
     }
 
     btn.addEventListener("click", () => {
-      const section = UserSelect.mode;
-      let moduleLevel = Model.getLevel({ section, module: moduleName });
-
-      if (moduleLevel) {
-        moduleLevel++;
-      } else {
-        moduleLevel = 1;
-      }
-
-      if (moduleLevel > modulesData[moduleName].prices.length) {
-        moduleLevel = 0;
-      }
-
-      Model.setData([
-        {
-          module: moduleName,
-          level: moduleLevel,
-          section
+      Modal.open({
+        moduleData: modulesData[moduleName],
+        selected: {
+          from: Model.getLevel({ section: `current`, module: moduleName }),
+          to: Model.getLevel({ section: `target`, module: moduleName })
+        },
+        onOk: moduleLevel => {
+          Model.setData([
+            {
+              module: moduleName,
+              level: moduleLevel.from,
+                section: `current`
+            },
+            {
+              module: moduleName,
+              level: moduleLevel.to,
+                section: `target`
+            }
+          ]);
         }
-      ]);
+      });
     });
   });
 }

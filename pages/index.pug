@@ -54,5 +54,21 @@ html(lang='en')
       section.modules-pack
         each moduleData  in supportModules
           +module(moduleData)
-
+    .modal
+      .modal-container
+        .module-form
+          img(src="modules/emp.png", alt="module icon").module-form__icon
+          h2.module-form__header Module name
+          p.module-form__description Module description
+          label.module-form__select-label from
+            select(name="from")
+              option(value="1" label=1)
+              option(value="2" label=2)
+          label.module-form__select-label to
+            select(name="to")
+              option(value="1" label=1)
+              option(value="2" label=2)
+          .footer
+            button.module-form__btn.module-form__btn--cancel Cancel
+            button.module-form__btn.module-form__btn--ok Ok
   script(src='script.js')

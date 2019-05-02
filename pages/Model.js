@@ -11,7 +11,7 @@ const Model = {
     return this.data[section];
   },
   getLevel({ module, section }) {
-    return this.data[section][module];
+    return this.data[section][module] || 0;
   },
   setData(newData) {
     newData.forEach(({ module, level, section }) => {
