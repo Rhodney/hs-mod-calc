@@ -30,31 +30,35 @@ function getInitModules() {
 
   const currentModuleStr = parseQueryString(location.search.slice(1))[CURRENT_URL_RAPAM];
   const targetModuleStr = parseQueryString(location.search.slice(1))[TARGET_URL_RAPAM];
-
-  const currentModules = parseModules(allModuleKeys, currentModuleStr);
-  const targetModules = parseModules(allModuleKeys, targetModuleStr);
-
   const modulesData = [];
 
-  Object.keys(currentModules)
-    .filter((moduleName) => currentModules[moduleName])
-    .forEach((moduleName) => {
-      modulesData.push({
-        module: moduleName,
-        level: currentModules[moduleName],
-        section: `current`,
-      });
-    });
+  if (currentModuleStr) {
+    const currentModules = parseModules(allModuleKeys, currentModuleStr);
 
-  Object.keys(targetModules)
-    .filter((moduleName) => targetModules[moduleName])
-    .forEach((moduleName) => {
-      modulesData.push({
-        module: moduleName,
-        level: targetModules[moduleName],
-        section: `target`,
+    Object.keys(currentModules)
+      .filter((moduleName) => currentModules[moduleName])
+      .forEach((moduleName) => {
+        modulesData.push({
+          module: moduleName,
+          level: currentModules[moduleName],
+          section: `current`,
+        });
       });
-    });
+  }
+
+  if (targetModuleStr) {
+    const targetModules = parseModules(allModuleKeys, targetModuleStr);
+
+    Object.keys(targetModules)
+      .filter((moduleName) => targetModules[moduleName])
+      .forEach((moduleName) => {
+        modulesData.push({
+          module: moduleName,
+          level: targetModules[moduleName],
+          section: `target`,
+        });
+      });
+  }
 
   return modulesData;
 }

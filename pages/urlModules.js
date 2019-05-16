@@ -16,7 +16,7 @@ export function stringifyModules(modules, userSelect) {
   let url = "";
 
   modules.forEach((moduleName, i) => {
-    if (userSelect[moduleName] === 10) {
+    if (userSelect[moduleName] == 10) {
       url += "A";
     } else if (userSelect[moduleName]) {
       url += userSelect[moduleName];
