@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/parcel pages/index.pug",
-    "prod": "./node_modules/.bin/parcel build pages/index.pug --public-url ./"
+    "dev": "./node_modules/.bin/parcel pages/index.pug -d docs",
+    "prod": "./node_modules/.bin/parcel build pages/index.pug --public-url ./ -d docs"
   },
   "repository": {
     "type": "git",
