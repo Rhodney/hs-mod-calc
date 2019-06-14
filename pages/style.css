@@ -143,6 +143,8 @@ h2 {
   background-color: #fff;
   margin: 20px auto;
   max-width: 300px;
+  position: relative;
+  overflow: hidden;
 }
 
 .module-form {
@@ -157,10 +159,11 @@ h2 {
 }
 
 .module-form__icon {
-  flex-shrink: 0;
-  flex-basis: 64px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
   height: 56px;
-  margin-right: 10px;
+  width: 56px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -168,8 +171,13 @@ h2 {
 
 .module-form__title {
   margin: 0;
-  font-weight: normal;
-  font-size: 16px;
+  padding: 0;
+  font-size: 18px;
+  font-weight: bolder;
+  color: #9fe5fb;
+  background-color: rgba(16, 20, 21, 0.7);
+  display: block;
+  z-index: 1;
 }
 
 .module-form__selects {
@@ -202,11 +210,14 @@ h2 {
 }
 
 .levels-table tr:nth-child(even) {
-  background-color: #161b1d;
+  background-color: #252b2d;
 }
 
 .levels-table label {
   display: flex;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 1;
   flex-direction: row-reverse;
 }
 
@@ -216,6 +227,7 @@ h2 {
 
 .levels-table th,
 .levels-table td {
+  font-weight: normal;
   border: 0;
-  padding: 5px 10px;
+  padding: 3px 10px 3px 0;
 }
