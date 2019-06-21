@@ -1,16 +1,17 @@
-import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm } from './utils';
-import { getModuleName, getModuleMaxLevel } from '../data/selectors';
+import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getLabelAndFormatter } from './utils';
+import { getModuleName, getModuleMaxLevel, getModuleLevelParams } from '../data/selectors';
+import { modalStore, changeFrom, changeTo } from './Model';
 
 const modal = document.querySelector('.modal');
 
 const title = modal.querySelector('.module-form__title');
 const icon = modal.querySelector('.module-form__icon');
+const moduleParams = modal.querySelector('.module-form__params');
 
 const okBtn = modal.querySelector('.btn--ok');
 const cancelBtn = modal.querySelector('.btn--cancel');
 
 const tableEl = modal.querySelector('.levels-table');
-const rowsEls = modal.querySelectorAll('tr[data-level]');
 const moduleResultSpan = modal.querySelector('.module-form__result-val');
 
 modal.addEventListener('click', (event) => {
@@ -36,51 +37,96 @@ cancelBtn.addEventListener('click', () => {
   cancelButtonHandler && cancelButtonHandler();
 });
 
-tableEl.addEventListener('change', () => {
-  renderTimeAndPrice();
+tableEl.addEventListener('change', (event) => {
+  if (event.target.name === `from`) {
+    changeFrom(+event.target.value);
+  } else {
+    changeTo(+event.target.value);
+  }
 });
 
-function getCurrentRadioValues() {
-  const fromInput = tableEl.querySelector('input[name=from]:checked');
-  const toInput = tableEl.querySelector('input[name=to]:checked');
+function setTitleAndIcon({ moduleId }) {
+  if (moduleId) {
+    title.innerHTML = getModuleName(moduleId) || `-`;
 
-  return [+fromInput.value, +toInput.value];
+    // неприятный хак, но пока других идей нет
+    const iconBG = document.querySelector(`[data-module-id="${moduleId}"] .module__icon`).getAttribute('style');
+    icon.setAttribute('style', iconBG);
+  }
 }
 
-let currentModuleData = null; // стыдных хак, но хочется побыстрее сделать
+function updateRadio(parent, name, value) {
+  parent.querySelectorAll(`input`).forEach((input) => {
+    input.checked = input.value == value;
+  });
+}
 
-function setSelectData(moduleId, selected) {
-  currentModuleData = moduleId;
+function updateCurrentRadio(state) {
+  updateRadio(tableEl.querySelector(`.levels-table__row--from`), `from`, state.currentLevel || 0);
+}
+
+function updateTargetRadio(state) {
+  updateRadio(tableEl.querySelector(`.levels-table__row--to`), `to`, state.targetLevel || 0);
+}
+
+export function toggleLevelRows(state) {
+  const moduleId = state.moduleId;
+
+  if (!moduleId) {
+    return;
+  }
+
   const moduleMaxLevel = getModuleMaxLevel(moduleId);
 
-  rowsEls.forEach((row) => {
-    const rowLevel = +row.dataset.level;
-    row.hidden = rowLevel > moduleMaxLevel;
+  tableEl.querySelectorAll(`.levels-table__row--from label`).forEach(toggleLabel);
+  tableEl.querySelectorAll(`.levels-table__row--to label`).forEach(toggleLabel);
 
-    const fromInput = row.querySelector('input[name=from]');
-    const toInput = row.querySelector('input[name=to]');
-    fromInput.checked = rowLevel == selected.from;
-    toInput.checked = rowLevel == selected.to;
-  });
-
-  title.innerHTML = getModuleName(moduleId) || `-`;
-
-  // неприятный хак, но пока других идей нет
-  const iconBG = document.querySelector(`[data-module-id="${moduleId}"] .module__icon`).getAttribute('style');
-  icon.setAttribute('style', iconBG);
-
-  renderTimeAndPrice();
+  function toggleLabel(label, level) {
+    label.style.display = level <= moduleMaxLevel ? `` : `none`;
+  }
 }
 
-function renderTimeAndPrice(moduleId = currentModuleData) {
+function renderParamsTable(from, to) {
+  let html = ``;
+
+  Object.keys(from).forEach((key) => {
+    if (key === `UnlockPrice` || key === `UnlockTime`) {
+      return;
+    }
+
+    const { label, format } = getLabelAndFormatter(key);
+    let fromVal = from[key];
+    let toVal = to[key];
+    let deltaVal = toVal - fromVal;
+
+    const valString = deltaVal
+      ? `${format(fromVal)} <span class='param-row__delta'>+ ${format(deltaVal)}</span> = ${format(toVal)}`
+      : to
+      ? `${format(toVal)}`
+      : `-`;
+
+    html += `
+    <div class='param-row'>
+      <p class='param-row__label'>${label}</p>
+      <p class='param-row__value'>${valString}</p>
+    </div>`;
+  });
+
+  moduleParams.innerHTML = html;
+}
+
+function renderTimeAndPrice(state) {
+  const moduleId = state.moduleId;
+  const currentLevel = state.currentLevel || 0;
+  const targetLevel = state.targetLevel || 0;
+
   if (!moduleId) {
     moduleResultSpan.innerHTML = `error`;
     return;
   }
 
-  const [from, to] = getCurrentRadioValues();
-  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, from);
-  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, to);
+  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, currentLevel);
+  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, targetLevel);
 
   let term = 0;
   let money = 0;
@@ -104,9 +150,29 @@ function renderTimeAndPrice(moduleId = currentModuleData) {
   }
 }
 
+export function initModal() {
+  modalStore.watch(`moduleId`, toggleLevelRows);
+  modalStore.watch(`moduleId`, setTitleAndIcon);
+  modalStore.watch(`targetLevel`, updateTargetRadio);
+  modalStore.watch(`currentLevel`, updateCurrentRadio);
+
+  modalStore.watch(`currentLevel`, renderResults);
+  modalStore.watch(`targetLevel`, renderResults);
+}
+
+function renderResults(state) {
+  const moduleId = state.moduleId;
+  const currentLevel = state.currentLevel || 0;
+  const targetLevel = state.targetLevel || 0;
+
+  if (moduleId) {
+    renderTimeAndPrice(state);
+    renderParamsTable(getModuleLevelParams(moduleId, currentLevel), getModuleLevelParams(moduleId, targetLevel));
+  }
+}
+
 const Modal = {
-  open({ moduleId, selected, onOk, onCancel }) {
-    setSelectData(moduleId, selected);
+  open({ onOk, onCancel }) {
     modal.style.display = 'block';
     modal.scrollTop = 0;
 
@@ -114,7 +180,6 @@ const Modal = {
     cancelButtonHandler = onCancel;
   },
   close() {
-    currentModuleData = null;
     modal.style.display = '';
   },
 };

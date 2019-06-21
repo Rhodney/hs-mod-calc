@@ -1,6 +1,7 @@
 var fs = require('fs');
 var someHumanData = require('./someHumanData').someHumanData;
 var modulesByTypes = require('./someHumanData').modulesByTypes;
+var specialModuleData = require('./someHumanData').specialModuleData;
 var prettier = require('prettier');
 var csv2json = require('csv2json');
 
@@ -16,8 +17,9 @@ fs.createReadStream('./raw_data/modules.csv')
     const modulesDataRaw = JSON.parse(file);
 
     let modulesData = getModuleInfo(modulesDataRaw);
+    let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
 
-    saveToFile(outputFileName, modulesData);
+    saveToFile(outputFileName, fullModulesData);
     fs.unlinkSync(tempJsonFileName);
   });
 
@@ -86,31 +88,28 @@ function getNonEmptyString(obj) {
   return cleanObj;
 }
 
-function getValsByKeys(obj, keys) {
-  const res = keys.map((key) => obj[key]);
-  return res;
-}
+function squooshNonArrays(moduleData) {
+  const newModuleData = {};
 
-function sepatareScallable(colNames, data) {
-  const dataByName = {};
-
-  colNames.forEach((name, i) => {
-    dataByName[colNames[i]] = [];
-  });
-
-  data.forEach((dataRow) => {
-    colNames.forEach((name, i) => {
-      dataByName[name].push(dataRow[i]);
-    });
-  });
-
-  colNames.forEach((name, i) => {
-    if (dataByName[name][1] === '' || dataByName[name].length === 1) {
-      dataByName[name] = dataByName[name][0];
+  Object.keys(moduleData).forEach((key) => {
+    if (moduleData[key][1] === '' || moduleData[key].length === 1) {
+      newModuleData[key] = moduleData[key][0];
+    } else {
+      newModuleData[key] = moduleData[key];
     }
   });
 
-  return dataByName;
+  return newModuleData;
+}
+
+function addSpecialModulesData(modulesData, specData) {
+  modulesData = { ...modulesData };
+
+  Object.keys(specData).forEach((key) => {
+    modulesData[key] = specData[key];
+  });
+
+  return modulesData;
 }
 
 function getModuleInfo(modulesData) {
@@ -133,6 +132,9 @@ function getModuleInfo(modulesData) {
     'WeaponEffectType',
     'ScaleEffectsWithZoom',
     'AllowedStarTypes',
+    'DoNotAward',
+    'TeleportToTradeStation',
+    'MaxImpulse',
   ];
 
   modulesData.forEach((modData) => {
@@ -143,27 +145,27 @@ function getModuleInfo(modulesData) {
     if (modData.Name && currentName !== modData.Name) {
       currentName = modData.Name;
       currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
-    }
 
-    if (!modulesInfo[currentName]) {
       modulesInfo[currentName] = {
         eng: someHumanData[currentName].eng,
         id: currentName,
-        colNames: currentMatterKeys,
-        data: [],
-        options: [],
+        maxLevel: 0,
       };
+
+      currentMatterKeys.forEach((key) => {
+        modulesInfo[currentName][key] = [];
+      });
     }
 
-    modulesInfo[currentName].data.push(getValsByKeys(modData, currentMatterKeys));
+    modulesInfo[currentName].maxLevel++;
+
+    currentMatterKeys.forEach((key) => {
+      modulesInfo[currentName][key].push(modData[key]);
+    });
   });
 
   Object.keys(modulesInfo).forEach((key) => {
-    modulesInfo[key] = {
-      eng: modulesInfo[key].eng,
-      id: modulesInfo[key].id,
-      ...sepatareScallable(modulesInfo[key].colNames, modulesInfo[key].data),
-    };
+    modulesInfo[key] = squooshNonArrays(modulesInfo[key]);
   });
 
   return modulesInfo;
