@@ -74,7 +74,7 @@ export function getLabelAndFormatter(key) {
   } else if (moneyFields.indexOf(key) > -1) {
     format = (_) => `${numberWithCommas(_)} cr`;
   } else if (auFields.indexOf(key) > -1) {
-    format = (_) => `${_}AU`;
+    format = (_) => `${_ / 10}AU`;
   } else if (percentFields.indexOf(key) > -1) {
     format = (_) => `${_}%`;
   }

@@ -124,8 +124,8 @@ var modulesByTypes = {
   shield: [
     'WeakShield',
     'StandardShield',
-    'StrongShield',
     'PassiveShield',
+    'StrongShield',
     'MirrorShield',
     'BlastShield',
     'AreaShield',
