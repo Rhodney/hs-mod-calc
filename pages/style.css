@@ -146,7 +146,8 @@ h2 {
 .modal-container {
   background-color: #fff;
   margin: 20px auto;
-  max-width: 300px;
+  max-width: 350px;
+  width: calc(100% - 20px);
   position: relative;
   overflow: hidden;
 }
