@@ -120,7 +120,6 @@ function getModuleInfo(modulesData) {
 
   const trash = [
     'ActivationType',
-    'ExtraTradeSlots',
     'ShowWSInfo',
     'HideSelection',
     'SlotType',

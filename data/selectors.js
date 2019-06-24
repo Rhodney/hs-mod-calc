@@ -40,6 +40,7 @@ export function getModuleParamLabel(key) {
     TradeStationDeliverReward: `Payoff`,
     TeleportShipments: `Max shipments`,
     APTPIOTTP: null,
+    ExtraTradeSlots: `Additional slots`,
     MiningSpeedModifierPct: `Mining speed`,
     ExtraMineralStorage: `Activation storage`,
     IncreaseSectorHydroPct: `Hydro increase`,
