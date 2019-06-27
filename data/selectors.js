@@ -65,6 +65,12 @@ export function getModuleParamLabel(key) {
     AOEDamage: `Area damage`,
     AOEDamage_WS: `Area damage (WS)`,
     AOEDamage_BS: `Area damage (BS)`,
+    Speed: `Speed`,
+    HP: `Hull strength`,
+    Damage: `Explosion damage`,
+    DamageRange: `Explosion range`,
+    DamageWhenNeutralized: `Damage when neutralized`,
+    DamageRangeWhenNeutralized: `Damage range when neutralized`,
   }[key];
 
   return trKey || key;

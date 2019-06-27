@@ -45,7 +45,7 @@ export function getLabelAndFormatter(key) {
   const hydroFields = [`ActivationFuelCost`];
   const moneyFields = [`BCCost`];
   const fuelFields = [`FuelUseIncrease`];
-  const auFields = [`EffectRadiusWS`, `EffectRadiusBS`, `EffectRadius`];
+  const auFields = [`EffectRadiusWS`, `EffectRadiusBS`, `EffectRadius`, `DamageRange`, `DamageRangeWhenNeutralized`];
   const percentFields = [
     `MiningSpeedModifierPct`,
     `JobPayoutIncreasePercent`,
@@ -60,6 +60,7 @@ export function getLabelAndFormatter(key) {
     `SalvageHullPercent`,
     `IncreaseSectorHydroPct`,
   ];
+  const speedFields = [`Speed`];
 
   let format = numberWithCommas;
 
@@ -75,6 +76,8 @@ export function getLabelAndFormatter(key) {
     format = (_) => `${numberWithCommas(_)} cr`;
   } else if (auFields.indexOf(key) > -1) {
     format = (_) => `${_ / 10}AU`;
+  } else if (speedFields.indexOf(key) > -1) {
+    format = (_) => `${_ * 6}AU/m`;
   } else if (percentFields.indexOf(key) > -1) {
     format = (_) => `${_}%`;
   }

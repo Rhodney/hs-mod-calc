@@ -5,22 +5,32 @@ var specialModuleData = require('./someHumanData').specialModuleData;
 var prettier = require('prettier');
 var csv2json = require('csv2json');
 
-const tempJsonFileName = './raw_data/modules.json';
+const tempJsonModulesFileName = './raw_data/modules.json';
+const tempJsonProjectilesFileName = './raw_data/projectiles.json';
 const outputFileName = './data/moduleData.js';
 
 fs.createReadStream('./raw_data/modules.csv')
   .pipe(csv2json({}))
-  .pipe(fs.createWriteStream(tempJsonFileName))
+  .pipe(fs.createWriteStream(tempJsonModulesFileName))
   .on('finish', function() {
-    const file = fs.readFileSync(tempJsonFileName).toString();
+    fs.createReadStream('./raw_data/projectiles.csv')
+      .pipe(csv2json({}))
+      .pipe(fs.createWriteStream(tempJsonProjectilesFileName))
+      .on('finish', function() {
+        const modulesFile = fs.readFileSync(tempJsonModulesFileName).toString();
+        const projectilesFile = fs.readFileSync(tempJsonProjectilesFileName).toString();
 
-    const modulesDataRaw = JSON.parse(file);
+        const modulesDataRaw = JSON.parse(modulesFile);
+        const projectilesDataRaw = JSON.parse(projectilesFile);
 
-    let modulesData = getModuleInfo(modulesDataRaw);
-    let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
+        let modulesData = getModuleInfo(modulesDataRaw);
+        modulesData = addRocketInfo(modulesData, projectilesDataRaw);
+        let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
 
-    saveToFile(outputFileName, fullModulesData);
-    fs.unlinkSync(tempJsonFileName);
+        saveToFile(outputFileName, fullModulesData);
+        fs.unlinkSync(tempJsonProjectilesFileName);
+        fs.unlinkSync(tempJsonModulesFileName);
+      });
   });
 
 function saveToFile(filePath, modulesData) {
@@ -112,6 +122,56 @@ function addSpecialModulesData(modulesData, specData) {
   return modulesData;
 }
 
+function addRocketInfo(modulesData, projectilesData) {
+  const rocketsData = getModuleInfo(projectilesData);
+
+  function getRockerData(rocketData) {
+    const data = {
+      Speed: Array.from({ length: rocketData.HP.length }, () => rocketData.Speed),
+      HP: rocketData.HP,
+      Damage: rocketData.Damage,
+      DamageRange: rocketData.DamageRange,
+    };
+
+    if (rocketData.DamageWhenNeutralized) {
+      data.DamageWhenNeutralized = rocketData.DamageWhenNeutralized;
+    }
+
+    if (rocketData.DamageRangeWhenNeutralized) {
+      data.DamageRangeWhenNeutralized = rocketData.DamageRangeWhenNeutralized;
+    }
+
+    return data;
+  }
+
+  modulesData.DartLauncher = {
+    ...modulesData.DartLauncher,
+    ...getRockerData(rocketsData.Dart),
+  };
+
+  modulesData.HydroRocket = {
+    ...modulesData.HydroRocket,
+    ...getRockerData(rocketsData.HydroRocket),
+  };
+
+  modulesData.AlphaRocket = {
+    ...modulesData.AlphaRocket,
+    ...getRockerData(rocketsData.Alpha),
+  };
+
+  modulesData.DeltaRocket = {
+    ...modulesData.DeltaRocket,
+    ...getRockerData(rocketsData.Delta),
+  };
+
+  modulesData.OmegaRocket = {
+    ...modulesData.OmegaRocket,
+    ...getRockerData(rocketsData.Omega),
+  };
+
+  return modulesData;
+}
+
 function getModuleInfo(modulesData) {
   let modulesInfo = {};
 
@@ -134,6 +194,12 @@ function getModuleInfo(modulesData) {
     'DoNotAward',
     'TeleportToTradeStation',
     'MaxImpulse',
+    'StopCountdownOnDisable',
+    'AdditionalWaypoint',
+    'Model',
+    'ImpactFX',
+    'DestroyedFX',
+    'LaunchFX',
   ];
 
   modulesData.forEach((modData) => {
@@ -146,7 +212,7 @@ function getModuleInfo(modulesData) {
       currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
 
       modulesInfo[currentName] = {
-        eng: someHumanData[currentName].eng,
+        ...(someHumanData[currentName] ? { eng: someHumanData[currentName].eng } : null),
         id: currentName,
         maxLevel: 0,
       };
