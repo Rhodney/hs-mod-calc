@@ -1,3 +1,4 @@
+- var isProd = process.env.NODE_ENV === `production`;
 doctype html
 html(lang='en')
   head
@@ -7,8 +8,10 @@ html(lang='en')
     meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     block style
     block script
-    script
-      include ./heap.js
+    if isProd
+      script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-141203116-2')
+      script
+        include ga.js
   body
     .container
       block content
