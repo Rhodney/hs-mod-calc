@@ -1,7 +1,7 @@
 extends ./layout.pug
 
 mixin module(data)
-  - var bg = "background-image: url('./modules/" + data.id + ".png')"
+  - var bg = "background-image: url('../img/modules/" + data.id + ".png')"
   div.modules-pack__item
     button.module(
       data-module-id=data.id,
@@ -14,10 +14,10 @@ block title
   | Hades Star Module Calculator
 
 block style
-  link(type='text/css', rel='stylesheet', href='./style.css')
+  link(type='text/css', rel='stylesheet', href='./module-calc/module-calc.css')
 
 block script
-  script(src='./script.js', defer)
+  script(src='./module-calc/script.js', defer)
 
 block content
   header

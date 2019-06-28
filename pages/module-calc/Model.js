@@ -1,4 +1,4 @@
-import { createStore, createEvent } from '../state-manager/state';
+import { createStore, createEvent } from '../../state-manager/state';
 
 export const modulesStore = createStore({});
 window.modulesStore = modulesStore;
