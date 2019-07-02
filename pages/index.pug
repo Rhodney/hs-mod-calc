@@ -19,6 +19,9 @@ block style
 block script
   script(src='./module-calc/script.js', defer)
 
+block vars
+  - var currentUrl = 'index';
+
 block content
   header
     h1 Module calculator
@@ -101,4 +104,5 @@ block content
 
 append footer
   p.dev Module info by&nbsp;
+    br
     a(href='http://www.hadesstar.info/menu-en.html', target='_blank') hadesstar.info

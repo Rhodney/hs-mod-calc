@@ -9,11 +9,14 @@ block style
 block script
   script(src='./crystal-calc/crystal-calc.js', defer)
 
+block vars
+  - var currentUrl = 'crystal-calc';
+
 block content
   header
     h1 Crystal calculator
 
-  main.change-desk
+  div.change-desk
     div.change-desk__row.change-desk__row--in
       label.time-input
         input#days-2-crystals(name='days-2-crystals', type='tel', maxlength='2', value='')
