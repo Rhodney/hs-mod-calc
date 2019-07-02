@@ -1,9 +1,9 @@
-import { save, get } from './localStorageUtils';
+import { save, get } from '../localStorageUtils';
 import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal, { initModal } from './Modal';
-import { modulesData, allModuleKeys } from '../data/moduleData';
+import { modulesData, allModuleKeys } from '../../data/moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
-import { stringifyTerm, numberWithCommas, getSumModuleTimeAndPrice } from './utils';
+import { stringifyTerm, numberWithCommas, getSumModuleTimeAndPrice } from '../utils';
 
 const modules = document.querySelector('.modules');
 

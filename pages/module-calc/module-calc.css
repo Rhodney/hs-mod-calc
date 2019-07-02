@@ -1,4 +1,4 @@
-@import './layout.css';
+@import '../layout.css';
 
 @media (min-width: 900px) {
   .result-and-share {
@@ -144,7 +144,7 @@ h2 {
   background-size: auto 44px;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url('./module_background.png');
+  background-image: url('../../img/module_background.png');
   border: 0;
   font-size: 0;
 }

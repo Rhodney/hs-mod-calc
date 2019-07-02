@@ -1,5 +1,5 @@
-import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getLabelAndFormatter } from './utils';
-import { getModuleName, getModuleMaxLevel, getModuleLevelParams } from '../data/selectors';
+import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getLabelAndFormatter } from '../utils';
+import { getModuleName, getModuleMaxLevel, getModuleLevelParams } from '../../data/selectors';
 import { modalStore, changeFrom, changeTo } from './Model';
 
 const modal = document.querySelector('.modal');
