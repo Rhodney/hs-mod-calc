@@ -18,8 +18,8 @@ export function stringifyModules(modulesKeys, userSelect) {
   }
 
   modulesKeys.forEach((moduleName, i) => {
-    currentStr += transform(userSelect[moduleName].current);
-    targetStr += transform(userSelect[moduleName].target);
+    currentStr += transform(userSelect[moduleName] && userSelect[moduleName].current || `0`);
+    targetStr += transform(userSelect[moduleName] && userSelect[moduleName].target || `0`);
   });
 
   return {
