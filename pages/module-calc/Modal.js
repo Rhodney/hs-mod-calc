@@ -156,8 +156,7 @@ export function initModal() {
   modalStore.watch(`targetLevel`, updateTargetRadio);
   modalStore.watch(`currentLevel`, updateCurrentRadio);
 
-  modalStore.watch(`currentLevel`, renderResults);
-  modalStore.watch(`targetLevel`, renderResults);
+  modalStore.watch(`*`, renderResults);
 }
 
 function renderResults(state) {
