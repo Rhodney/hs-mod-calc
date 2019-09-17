@@ -45,7 +45,6 @@ function initResetButton() {
 
   button.addEventListener(`click`, () => {
     modulesStore.set(() => {
-      console.log(getCleanState());
       return getCleanState();
     });
   });
@@ -168,6 +167,13 @@ function saveModules(modules) {
 
 function getModulesFromLocalStorage() {
   const data = get(LOCAL_STORAGE_MODULE_KEY, getCleanState());
+  if (!data.Suspend) {
+    data.Suspend = {
+      current: 0,
+      target: 0,
+    };
+    save(LOCAL_STORAGE_MODULE_KEY, data);
+  }
   return data;
 }
 

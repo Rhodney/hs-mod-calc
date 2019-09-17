@@ -50,12 +50,6 @@ const allModuleKeys = [
   ...modulesByTypes.support
 ];
 
-window._debug_data = {
-  modulesData,
-  allModuleKeys,
-  modulesByTypes
-};
-
 module.exports = {
   modulesData,
   allModuleKeys,
