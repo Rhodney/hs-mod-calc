@@ -1,6 +1,10 @@
 import { getModuleParamLabel, getModulePrices, getModuleTerms } from '../data/selectors';
 
 export function stringifyTerm(timeSec) {
+  timeSec = +timeSec;
+  const isNegative = timeSec < 0;
+  timeSec = Math.abs(timeSec);
+
   const secInMin = 60;
   const secInHour = 60 * secInMin;
   const secInDay = 24 * secInHour;
@@ -28,19 +32,25 @@ export function stringifyTerm(timeSec) {
     result.push(sec + `s`);
   }
 
+  if (isNegative) {
+    return  `-` + result.join(` `);
+  }
+
   return result.join(` `) || 0;
 }
 
 export function getLabelAndFormatter(key) {
   const label = getModuleParamLabel(key);
 
-  const timeFields = [
+  const secFields = [
     `SpawnLifetime`,
     `SpawnLifetime_WS`,
     `ActivationDelay`,
-    `ActivationPrepWS`,
+    `ActivationPrep`,
+    `ActivationPrepBS`,
     `RedStarLifeExtention`,
   ];
+  const sixHoursFields = [`ActivationPrepWS`];
   const secFuelds = [`EffectDurationx10`, `EffectDurationx10BS`, `EffectDurationx10WS`];
   const hydroFields = [`ActivationFuelCost`];
   const moneyFields = [`BCCost`];
@@ -54,20 +64,25 @@ export function getLabelAndFormatter(key) {
     `DroneShipmentBonus`,
     `TradeBurstShipmentBonus`,
     `MirrorDamagePct`,
+    `WaypointShipmentRewardBonus`,
+    `UnityBoostPercent`,
     `IncreaseSectorHydroPct`,
     `HydroUploadPct`,
     `SpeedIncreasePerShipment`,
     `SalvageHullPercent`,
     `IncreaseSectorHydroPct`,
   ];
+  const x10multFields = [`TimeWarpFactor`];
   const speedFields = [`Speed`];
 
   let format = numberWithCommas;
 
-  if (timeFields.indexOf(key) > -1) {
+  if (secFields.indexOf(key) > -1) {
     format = stringifyTerm;
   } else if (secFuelds.indexOf(key) > -1) {
     format = (_) => `${_ / 10} sec`;
+  } else if (sixHoursFields.indexOf(key) > -1) {
+    format = (_) => stringifyTerm(_ * 60 * 60 / 6);
   } else if (hydroFields.indexOf(key) > -1) {
     format = (_) => `${numberWithCommas(_)} hyd`;
   } else if (fuelFields.indexOf(key) > -1) {
@@ -78,6 +93,8 @@ export function getLabelAndFormatter(key) {
     format = (_) => `${_ / 10}AU`;
   } else if (speedFields.indexOf(key) > -1) {
     format = (_) => `${_ * 6}AU/m`;
+  } else if (x10multFields.indexOf(key) > -1) {
+    format = (_) => `${_ / 10}x`;
   } else if (percentFields.indexOf(key) > -1) {
     format = (_) => `${_}%`;
   }

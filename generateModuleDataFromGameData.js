@@ -200,14 +200,16 @@ function getModuleInfo(modulesData) {
     'ImpactFX',
     'DestroyedFX',
     'LaunchFX',
+    'BSScore',
+    'WhiteStarScore',
   ];
+
+  const matterFields = [`ActivationPrepBS`, `ActivationPrep`, `ActivationPrepWS`];
 
   modulesData.forEach((modData) => {
     if (+modData.Hide) {
       return;
     }
-
-    // console.log(modData);
 
     if (modData.Name && currentName !== modData.Name) {
       currentName = modData.Name;
@@ -227,7 +229,12 @@ function getModuleInfo(modulesData) {
     modulesInfo[currentName].maxLevel++;
 
     currentMatterKeys.forEach((key) => {
-      modulesInfo[currentName][key].push(modData[key]);
+      if (matterFields.includes(key) && !modData[key]) { // параметры, которые мы хотим сделать принудительно табличными
+        const firstVal = modulesInfo[currentName][key][0];
+        modulesInfo[currentName][key].push(firstVal);
+      } else {
+        modulesInfo[currentName][key].push(modData[key]);
+      }
     });
   });
 

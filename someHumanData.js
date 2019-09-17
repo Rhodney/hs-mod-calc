@@ -119,6 +119,7 @@ var modulesByTypes = {
     'Leap',
     'Bond',
     'AlphaDrone',
+    'Suspend',
     'OmegaRocket',
   ],
   shield: [
