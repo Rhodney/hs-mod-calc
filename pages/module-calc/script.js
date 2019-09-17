@@ -45,6 +45,7 @@ function initResetButton() {
 
   button.addEventListener(`click`, () => {
     modulesStore.set(() => {
+      console.log(getCleanState());
       return getCleanState();
     });
   });

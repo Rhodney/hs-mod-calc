@@ -67,6 +67,7 @@ var someHumanData = {
   Vengeance: { eng: `Vengeance` },
   DeltaRocket: { eng: `Delta Rocket` },
   Leap: { eng: `Leap` },
+  Suspend: { eng: `Suspend` },
   Bond: { eng: `Bond` },
   AlphaDrone: { eng: `Alpha Drone` },
   OmegaRocket: { eng: `Omega Rocket` },
