@@ -25,6 +25,7 @@ fs.createReadStream('./raw_data/modules.csv')
 
         let modulesData = getModuleInfo(modulesDataRaw);
         modulesData = addRocketInfo(modulesData, projectilesDataRaw);
+        modulesData = addDroneInfo(modulesData);
         let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
 
         saveToFile(outputFileName, fullModulesData);
@@ -118,6 +119,24 @@ function addSpecialModulesData(modulesData, specData) {
   Object.keys(specData).forEach((key) => {
     modulesData[key] = specData[key];
   });
+
+  return modulesData;
+}
+
+function addDroneInfo(modulesData) {
+  modulesData.AlphaDrone = {
+    ...modulesData.AlphaDrone,
+    HP: ['400', '1200', '2500', '3500', '4500', '5500', '6500', '7500', '8500', '10000', '12000', '14000'],
+    Speed: ['175', '175', '175', '175', '175', '175', '175', '175', '175', '175', '175', '175'],
+    DPS: ['120', '120', '120', '120', '120', '120', '120', '120', '120', '120', '120', '120'],
+  };
+  modulesData.MiningDrone = {
+    ...modulesData.MiningDrone,
+    HP: ['1000', '1500', '2200', '3000', '4000', '5000', '6000', '7000', '8000', '9000'],
+    HydrogenCapacity: ['140', '160', '180', '200', '220', '250', '280', '310', '350', '400'],
+    MiningSpeed: ['29.1', '33.3', '37.5', '41.7', '45.8', '52.2', '58.8', '65.2', '74.1', '85.7'],
+    Speed: ['200', '200', '200', '200', '200', '200', '200', '200', '200', '200'],
+  };
 
   return modulesData;
 }
@@ -229,7 +248,8 @@ function getModuleInfo(modulesData) {
     modulesInfo[currentName].maxLevel++;
 
     currentMatterKeys.forEach((key) => {
-      if (matterFields.includes(key) && !modData[key]) { // параметры, которые мы хотим сделать принудительно табличными
+      if (matterFields.includes(key) && !modData[key]) {
+        // параметры, которые мы хотим сделать принудительно табличными
         const firstVal = modulesInfo[currentName][key][0];
         modulesInfo[currentName][key].push(firstVal);
       } else {

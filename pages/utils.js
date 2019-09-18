@@ -33,7 +33,7 @@ export function stringifyTerm(timeSec) {
   }
 
   if (isNegative) {
-    return  `-` + result.join(` `);
+    return `-` + result.join(` `);
   }
 
   return result.join(` `) || 0;
@@ -42,15 +42,8 @@ export function stringifyTerm(timeSec) {
 export function getLabelAndFormatter(key) {
   const label = getModuleParamLabel(key);
 
-  const secFields = [
-    `SpawnLifetime`,
-    `SpawnLifetime_WS`,
-    `ActivationDelay`,
-    `ActivationPrep`,
-    `ActivationPrepBS`,
-    `RedStarLifeExtention`,
-  ];
-  const sixHoursFields = [`ActivationPrepWS`];
+  const secFields = [`SpawnLifetime`, `ActivationDelay`, `ActivationPrep`, `ActivationPrepBS`, `RedStarLifeExtention`];
+  const sixHoursFields = [`ActivationPrepWS`, `SpawnLifetime_WS`];
   const secFuelds = [`EffectDurationx10`, `EffectDurationx10BS`, `EffectDurationx10WS`];
   const hydroFields = [`ActivationFuelCost`];
   const moneyFields = [`BCCost`];
@@ -74,6 +67,7 @@ export function getLabelAndFormatter(key) {
   ];
   const x10multFields = [`TimeWarpFactor`];
   const speedFields = [`Speed`];
+  const miningSpeedFields = [`MiningSpeed`];
 
   let format = numberWithCommas;
 
@@ -82,7 +76,9 @@ export function getLabelAndFormatter(key) {
   } else if (secFuelds.indexOf(key) > -1) {
     format = (_) => `${_ / 10} sec`;
   } else if (sixHoursFields.indexOf(key) > -1) {
-    format = (_) => stringifyTerm(_ * 60 * 60 / 6);
+    format = (_) => stringifyTerm((_ * 60 * 60) / 6);
+  } else if (miningSpeedFields.indexOf(key) > -1) {
+    format = (_) => numberWithCommas((+_).toFixed(1)) + `/min`;
   } else if (hydroFields.indexOf(key) > -1) {
     format = (_) => `${numberWithCommas(_)} hyd`;
   } else if (fuelFields.indexOf(key) > -1) {
