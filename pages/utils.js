@@ -1,4 +1,4 @@
-import { getModuleParamLabel, getModulePrices, getModuleTerms } from '../data/selectors';
+import { getModulePrices, getModuleTerms } from '../data/selectors';
 
 export function stringifyTerm(timeSec) {
   timeSec = +timeSec;
@@ -39,9 +39,7 @@ export function stringifyTerm(timeSec) {
   return result.join(` `) || 0;
 }
 
-export function getLabelAndFormatter(key) {
-  const label = getModuleParamLabel(key);
-
+export function getStatFormatter(key) {
   const secFields = [`SpawnLifetime`, `ActivationDelay`, `ActivationPrep`, `ActivationPrepBS`, `RedStarLifeExtention`];
   const sixHoursFields = [`ActivationPrepWS`, `SpawnLifetime_WS`];
   const secFuelds = [`EffectDurationx10`, `EffectDurationx10BS`, `EffectDurationx10WS`];
@@ -95,10 +93,7 @@ export function getLabelAndFormatter(key) {
     format = (_) => `${_}%`;
   }
 
-  return {
-    label,
-    format,
-  };
+  return format;
 }
 
 export function numberWithCommas(x) {

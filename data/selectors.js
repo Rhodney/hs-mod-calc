@@ -81,7 +81,7 @@ export function getModuleParamLabel(key) {
 }
 
 export function getModuleName(key) {
-  return modulesData[key].eng;
+  return modulesData[key].engName;
 }
 
 export function getModuleLevelParams(key, level) {

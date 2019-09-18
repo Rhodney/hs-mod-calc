@@ -18,9 +18,10 @@
     "url": "https://github.com/Joxter/hades-site/issues"
   },
   "homepage": "https://github.com/Joxter/hades-site#readme",
-  "dependencies": {},
+  "dependencies": {
+    "csv-parser": "^2.3.0"
+  },
   "devDependencies": {
-    "csv2json": "^1.4.2",
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.17.1",
     "pug": "^2.0.3"

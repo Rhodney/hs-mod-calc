@@ -3,36 +3,43 @@ var someHumanData = require('./someHumanData').someHumanData;
 var modulesByTypes = require('./someHumanData').modulesByTypes;
 var specialModuleData = require('./someHumanData').specialModuleData;
 var prettier = require('prettier');
-var csv2json = require('csv2json');
+const csv = require('csv-parser');
 
-const tempJsonModulesFileName = './raw_data/modules.json';
-const tempJsonProjectilesFileName = './raw_data/projectiles.json';
 const outputFileName = './data/moduleData.js';
 
-fs.createReadStream('./raw_data/modules.csv')
-  .pipe(csv2json({}))
-  .pipe(fs.createWriteStream(tempJsonModulesFileName))
-  .on('finish', function() {
-    fs.createReadStream('./raw_data/projectiles.csv')
-      .pipe(csv2json({}))
-      .pipe(fs.createWriteStream(tempJsonProjectilesFileName))
-      .on('finish', function() {
-        const modulesFile = fs.readFileSync(tempJsonModulesFileName).toString();
-        const projectilesFile = fs.readFileSync(tempJsonProjectilesFileName).toString();
+Promise.all([
+  csvToJsonPromise('./raw_data/modules.csv'),
+  csvToJsonPromise('./raw_data/projectiles.csv'),
+  csvToJsonPromise('./raw_data/loc_strings_en.csv', ['key', 'value']),
+]).then(([modulesDataRaw, projectilesDataRaw, localisation]) => {
+  let modulesData = getModuleInfo(modulesDataRaw);
+  modulesData = addRocketInfo(modulesData, projectilesDataRaw);
+  modulesData = addDroneInfo(modulesData);
+  modulesData = addTranslations(modulesData, someHumanData);
+  let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
 
-        const modulesDataRaw = JSON.parse(modulesFile);
-        const projectilesDataRaw = JSON.parse(projectilesFile);
+  saveToFile(outputFileName, fullModulesData);
+});
 
-        let modulesData = getModuleInfo(modulesDataRaw);
-        modulesData = addRocketInfo(modulesData, projectilesDataRaw);
-        modulesData = addDroneInfo(modulesData);
-        let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
+function csvToJsonPromise(path, headers) {
+  let result = [];
 
-        saveToFile(outputFileName, fullModulesData);
-        fs.unlinkSync(tempJsonProjectilesFileName);
-        fs.unlinkSync(tempJsonModulesFileName);
+  return new Promise((resolve, reject) => {
+    const stream = fs
+      .createReadStream(path)
+      .pipe(csv(headers))
+      .on('data', (row) => {
+        result.push(row);
+      })
+      .on('finish', function(event) {
+        resolve(result);
       });
+
+    setTimeout(() => {
+      reject(`timeout read `, path);
+    }, 3000);
   });
+}
 
 function saveToFile(filePath, modulesData) {
   const content = `
@@ -111,6 +118,17 @@ function squooshNonArrays(moduleData) {
   });
 
   return newModuleData;
+}
+
+function addTranslations(modulesData, someHumanData) {
+  modulesData = { ...modulesData };
+
+  Object.keys(modulesData).forEach((key) => {
+    modulesData[key].engName = someHumanData[key].eng;
+    modulesData[key].engDescription = ``;
+  });
+
+  return modulesData;
 }
 
 function addSpecialModulesData(modulesData, specData) {
@@ -235,7 +253,6 @@ function getModuleInfo(modulesData) {
       currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
 
       modulesInfo[currentName] = {
-        ...(someHumanData[currentName] ? { eng: someHumanData[currentName].eng } : null),
         id: currentName,
         maxLevel: 0,
       };

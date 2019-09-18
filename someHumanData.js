@@ -59,7 +59,7 @@ var someHumanData = {
   Stealth: { eng: `Stealth` },
   Fortify: { eng: `Fortify` },
   Impulse: { eng: `Impulse` },
-  AlphaRocket: { eng: `AlphaRocket` },
+  AlphaRocket: { eng: `Alpha Rocket` },
   Salvage: { eng: `Salvage` },
   Supress: { eng: `Suppress` },
   Destiny: { eng: `Destiny` },

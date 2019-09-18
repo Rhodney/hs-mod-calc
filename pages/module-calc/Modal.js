@@ -1,5 +1,5 @@
-import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getLabelAndFormatter } from '../utils';
-import { getModuleName, getModuleMaxLevel, getModuleLevelParams } from '../../data/selectors';
+import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getStatFormatter } from '../utils';
+import { getModuleName, getModuleMaxLevel, getModuleLevelParams, getModuleParamLabel } from '../../data/selectors';
 import { modalStore, changeFrom, changeTo } from './Model';
 
 const modal = document.querySelector('.modal');
@@ -94,7 +94,8 @@ function renderParamsTable(from, to) {
       return;
     }
 
-    const { label, format } = getLabelAndFormatter(key);
+    const format = getStatFormatter(key);
+    const label = getModuleParamLabel(key);
     let fromVal = from[key];
     let toVal = to[key];
     let deltaVal = toVal - fromVal;
