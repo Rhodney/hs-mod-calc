@@ -1,0 +1,108 @@
+extends ./layout.pug
+
+mixin module(data)
+  - var bg = "background-image: url('../img/modules/" + data.id + ".png')"
+  div.modules-pack__item
+    button.module(
+      data-module-id=data.id,
+      data-current-l=0,
+      data-target-l=0,
+    )= data.name
+      span.module__icon(style=bg)
+
+block title
+  | Hades Star Module Calculator
+
+block style
+  link(type='text/css', rel='stylesheet', href='./module-calc/module-calc.css')
+
+block script
+  script(src='./module-calc/script.js', defer)
+
+block vars
+  - var currentUrl = 'index';
+
+block content
+  header
+    h1 Module calculator
+  div.result-and-share
+    div.result
+      h2 Result
+        button.btn.btn--light.reset-btn Reset
+      p.result-credit Credit:&nbsp;
+        span.value
+      p.result-duration Duration:&nbsp;
+        span.value
+    div.save-and-share
+      h2 Save and share
+      label
+        input(type='checkbox', name='current').autosave--js
+        | Autosave
+      div
+        button.btn.btn--ok.save-button--js Save modules
+        button.btn.btn--ok.load-button--js Load modules
+      p.share-modules-link Share current modules link:
+        |
+        a(target='_blank').share-modules-link--js
+  .modules
+    section.modules-pack
+      h2 Trade modules
+      div.modules-pack__items
+        each moduleData in tradeModules
+          +module(moduleData)
+
+    section.modules-pack
+      h2 Mining modules
+      div.modules-pack__items
+       each moduleData  in miningModules
+        +module(moduleData)
+
+    section.modules-pack
+      h2 Weapon modules
+      div.modules-pack__items
+        each moduleData  in weaponModules
+          +module(moduleData)
+
+    section.modules-pack
+      h2 Shield modules
+      div.modules-pack__items
+        each moduleData  in shieldModules
+          +module(moduleData)
+
+    section.modules-pack.modules-pack--big
+      h2 Support modules
+      div.modules-pack__items
+        each moduleData  in supportModules
+          +module(moduleData)
+  .modal
+    .modal-container
+      .module-form
+        .module-form__header
+          span.module-form__icon
+          h2.module-form__title -
+        div.levels-table
+          p Current level
+          div.levels-table__row.levels-table__row--from
+            each i in [0,1,2,3,4,5,6,7,8,9,10,11,12]
+              label
+                input(type='radio', name='from', value=i)
+                span!= i
+          p Target level
+          div.levels-table__row.levels-table__row--to
+            each i in [0,1,2,3,4,5,6,7,8,9,10,11,12]
+              label
+                input(type='radio', name='to', value=i)
+                span!= i
+        p.module-form__result Module result
+          br
+          span.module-form__result-val
+        .module-form__buttons
+          button.btn.btn--cancel Cancel
+          button.btn.btn--ok Ok
+        p.module-form__result Module stats
+        .module-form__params
+
+append footer
+  p.dev Module info by&nbsp;
+    br
+    a(href='http://www.hadesstar.info/menu-en.html', target='_blank') hadesstar.info

@@ -1,0 +1,37 @@
+- var isProd = process.env.NODE_ENV === `production`;
+-
+  var pages = [
+      {url: `index`, label: `Module calculator`},
+      {url: `crystal-calc`, label: `Crystal calculator`},
+  ];
+
+doctype html
+html(lang='en')
+  head
+    title
+      block title
+        | Hades Star Tools
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    block style
+    block script
+    if isProd
+      script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-141203116-2')
+      script
+        include ga.js
+  body
+    block vars
+      - var currentUrl = 'layout'
+
+    .container
+      nav
+        ul.navigation
+          each page in pages
+            li(class="navigation__item " + (page.url == currentUrl ? "navigation__item--active" : ""))
+              a(href='./' + page.url + '.pug')= page.label
+      main
+        block content
+      footer
+        block footer
+          p.dev dev by Joxter&nbsp
+            br
+            a(href='https://t.me/joxter', target='_blank') telegram
