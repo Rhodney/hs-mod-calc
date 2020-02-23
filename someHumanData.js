@@ -60,299 +60,316 @@ var modulesByTypes = {
   weapon: ['WeakBattery', 'Battery', 'Laser', 'MassBattery', 'DualLaser', 'Barrage', 'DartLauncher'],
 };
 
-// All
-
-// --Blueprints Required
-// --Unlock Price
-// --Research Time
-// --Additional Hydrogen Use
-// --Activation Cost
-// --Install Price
 const paramsNames = {
-  TransportCapacity: [
-    // Additional Slots
+  Common: [
+    ['___NO_TRANSLATE___', 'blueprints required'],
+    ['___NO_TRANSLATE___', 'unlock price'],
+    ['___NO_TRANSLATE___', 'research time'],
+    ['TID_SHIP_UPGRADE_EFFECT_FUEL_INCREASE', 'ADDITIONAL HYDROGEN USE'],
+    ['TID_MODULE_DESCR_ACTIVATION_COST', 'ACTIVATION COST'],
+    ['TID_MODULE_INSTALL_PRICE_STAT', 'INSTALL PRICE'],
   ],
+  TransportCapacity: [['TID_SHIP_UPGRADE_EFFECT_TRADE_SLOTS', 'ADDITIONAL SLOTS']],
   ShipmentComputer: [
-    // Bonus Reward
+    ['TID_SHIP_UPGRADE_EFFECT_BONUS_REWARD', 'BONUS REWARD'],
+    ['TID_MODULE_TRADEBURST_BONUS', 'BONUS REWARD'],
   ],
   Trader: [
-    // Trade Boost
-    // Effect Duration
-    // Shipment Reward Bonus
+    ['TID_MODULE_TRADER', 'TRADE BOOST'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['TID_SHIP_UPGRADE_EFFECT_JOB_PAYOUT_INCREASE', 'SHIPMENT REWARD BONUS'],
   ],
-  Rush: [
-    // Speed Increase Per Shipment
-  ],
+  Rush: [['___NO_TRANSLATE___', 'speed increase per shipment']],
   TradeBurst: [
-    // Threshold
-    // Bonus Reward
-    // Effect Duration
+    ['TID_MODULE_TRADEBURST_THRESHOLD', 'THRESHOLD'],
+    ['TID_SHIP_UPGRADE_EFFECT_BONUS_REWARD', 'BONUS REWARD'],
+    ['TID_MODULE_TRADEBURST_BONUS', 'BONUS REWARD'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
   ],
   ShipmentDrone: [
-    // Total Cargo Slots
-    // Bonus Per Additional Shipment
-    // Max Bonus
+    ['TID_TRANSPORT_CAPACITY_TOTAL', 'TOTAL CARGO SLOTS'],
+    ['TID_MODULE_BONUS_PER_SHIPMENT', 'BONUS PER ADDITIONAL SHIPMENT'],
+    ['___NO_TRANSLATE___', 'max bonus'],
   ],
-  Offload: [
-    // Payoff
-    // Effect Duration
-  ],
+  Offload: [['TID_OFFLOAD_MODULE_PAYOFF', 'PAYOFF'], ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION']],
   ShipmentBeam: [
-    // Max Shipments
+    ['TID_MODULE_SHIPMENTBEAM_MAX_SHIPMENTS', 'MAX SHIPMENTS'],
+    ['TID_NUM_SHIPMENTS_MAX', 'MAX SHIPMENTS'],
   ],
-  Entrust: [
-    // Effect Range
-  ],
+  Entrust: [['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE']],
   Dispatch: [
-    // Preparation Time Per Item
-    // Preparation Time Per Item (White Star)
+    ['TID_DISPATCH_PREP_TIME', 'PREPARATION TIME PER ITEM'],
+    ['___NO_TRANSLATE___', 'preparation time per item (white star)'],
   ],
-  Recall: [
-    // -
-  ],
-  /////////////////////////////////////////////
+  Recall: [['___NO_TRANSLATE___', '-']],
   MiningBoost: [
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Mining Speed
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['TID_MODULE_MINING_SPEED_STAT', 'MINING SPEED'],
+    ['TID_MINER_MINE_SPEED', 'MINING SPEED'],
   ],
-  MineralStorageCapacity: [
-    // Additional Storage
-  ],
+
+  MineralStorageCapacity: [['TID_MODULE_MINERAL_STORAGE_STAT', 'ADDITIONAL STORAGE']],
   Enrich: [
-    // Hydrogen Increase
-    //Max Enrich Amount
+    ['TID_MODULE_ENRICH_INCREASE', 'HYDROGEN INCREASE'],
+    ['TID_MODULE_ENRICH_MAX_CAPACITY_PER_ASTEROID', 'MAX ENRICH AMOUNT'],
   ],
-  MassMining: [
-    // Mining Speed
-  ],
-  HydrogenUpload: [
-    // Percent Uploaded
-  ],
+  MassMining: [['TID_MODULE_MINING_SPEED_STAT', 'MINING SPEED'], ['TID_MINER_MINE_SPEED', 'MINING SPEED']],
+  HydrogenUpload: [['TID_MODULE_HYDRO_UPLOAD_PERCENT', 'PERCENT UPLOADED']],
   MiningUnity: [
-    // Speed Increase Per Player
-    // Effect Duration
-    // Effect Duration (White Star)
+    ['TID_MODULE_DESCR_UNITY_MINER', 'SPEED INCREASE PER PLAYER'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
   ],
-  Crunch: [
-    // Max Amount
-  ],
+  Crunch: [['TID_MODULE_CRUNCH_MAX_AMOUNT', 'MAX AMOUNT']],
   Genesis: [
-    // Max New Asteroids
-    // Max New Hydrogen
+    ['TID_MODULE_GENESIS_MAX_ASTEROIDS', 'MAX NEW ASTEROIDS'],
+    ['TID_MODULE_GENESIS_MAX_HYDRO', 'MAX NEW HYDROGEN'],
   ],
   HydroRocket: [
-    // Required Hydrogen
-    // Hull Strength
-    // Explosion Damage
-    // Explosion Range
+    ['TID_REQUIRED_HYDROGEN', 'REQUIRED HYDROGEN'],
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_PROJECTILE_DAMAGE', 'EXPLOSION DAMAGE'],
+    ['TID_MODULE_PROJECTILE_DAMAGERANGE', 'EXPLOSION RANGE'],
   ],
   MiningDrone: [
-    // Hull Strength
-    // Mining Speed
-    // Total Hydrogen Capacity
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_MINING_SPEED_STAT', 'MINING SPEED'],
+    ['TID_MINER_MINE_SPEED', 'MINING SPEED'],
+    ['TID_HYDRO_CAPACITY_TOTAL', 'TOTAL HYDROGEN CAPACITY'],
   ],
-  /////////////// weapons
   WeakBattery: [
-    // Damage Per Second
-    // Damage Per Hour (White Star)
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
   ],
   Battery: [
-    // Damage Per Second
-    // Damage Per Hour (White Star)
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
   ],
   Laser: [
-    // Damage Per Second
-    // Maximum Damage Per Second
-    // Time to Maximum Damage (Red Star)
-    // Damage Per Hour (White Star)
-    // Maximum Damage Per Hour (White Star)
-    // Time to Maximum Damage (White Star)
-    // Time to Maximum Damage (Blue Star)
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['TID_MODULE_DESCR_MAX_DPS', 'MAXIMUM DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'time to maximum damage (red star)'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
+    ['___NO_TRANSLATE___', 'maximum damage per hour (white star)'],
+    ['___NO_TRANSLATE___', 'time to maximum damage (white star)'],
+    ['___NO_TRANSLATE___', 'time to maximum damage (blue star)'],
   ],
   MassBattery: [
-    // Damage Per Second
-    // Damage Per Hour (White Star)
-    // Max Targets
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
+    ['TID_MODULE_MAX_TARGETS', 'MAX TARGETS'],
   ],
   DualLaser: [
-    // Damage Per Second
-    // Maximum Damage Per Second
-    // Time to Maximum Damage
-    // Damage Per Hour (White Star)
-    // Maximum Damage Per Hour (White Star)
-    // Time to Maximum Damage (White Star)
-    // Time to Maximum Damage (Blue Star)
-    // Max Targets
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['TID_MODULE_DESCR_MAX_DPS', 'MAXIMUM DAMAGE PER SECOND'],
+    ['TID_MODULE_DESCR_MAX_DPS_TIME', 'TIME TO MAXIMUM DAMAGE'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
+    ['___NO_TRANSLATE___', 'maximum damage per hour (white star)'],
+    ['___NO_TRANSLATE___', 'time to maximum damage (white star)'],
+    ['___NO_TRANSLATE___', 'time to maximum damage (blue star)'],
+    ['TID_MODULE_MAX_TARGETS', 'MAX TARGETS'],
   ],
   Barrage: [
-    // Damage Per Second
-    // Additional Damage Per Enemy
-    // Maximum Damage
-    // Damage Per Hour (White Star)
-    // Additional Damage Per Enemy (White Star)
-    // Maximum Damage (White Star)
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'additional damage per enemy'],
+    ['___NO_TRANSLATE___', 'maximum damage'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
+    ['___NO_TRANSLATE___', 'additional damage per enemy (white star)'],
+    ['___NO_TRANSLATE___', 'maximum damage (white star)'],
   ],
   DartLauncher: [
-    // Hull Strength
-    // Explosion Damage
-    // Explosion Range
-    // Effect Range
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_PROJECTILE_DAMAGE', 'EXPLOSION DAMAGE'],
+    ['TID_MODULE_PROJECTILE_DAMAGERANGE', 'EXPLOSION RANGE'],
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
   ],
-  /////////////////   shield
   WeakShield: [
-    // Shield Strength
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
   ],
   StandardShield: [
-    // Shield Strength
-    // Speed Increase
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
+    ['TID_MODULE_SPEED_INCR_ACTIVATION', 'SPEED INCREASE'],
+    ['TID_MODULE_RUSH_SPEED_INCR', 'SPEED INCREASE'],
   ],
   PassiveShield: [
-    // Shield Strength
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
   ],
   StrongShield: [
-    // Shield Strength
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
   ],
   MirrorShield: [
-    // Shield Strength
-    // Damage Mirrored
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
+    ['TID_MODULE_MIRROR_DAMAGE_STAT', 'DAMAGE MIRRORED'],
   ],
   BlastShield: [
-    // Shield Strength
-    // Effect Range
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
   ],
   AreaShield: [
-    // Shield Strength
-    // Effect Range
+    ['TID_MODULE_SHIELD_STRENGTH_STAT', 'SHIELD STRENGTH'],
+    ['TID_FLEET_SHIELD_STRENGTH', 'SHIELD STRENGTH'],
+    ['TID_CERBERUS_STATION_SHIELD_LABEL', 'SHIELD STRENGTH'],
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
   ],
-  /////////////////   support
   EMP: [
-    // Effect Range
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   Teleport: [
-    // Effect Range
-    // Effect Range (White Star)
-    // Effect Range (Blue Star)
-    // Maximum Travel Efficiency (Red Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['___NO_TRANSLATE___', 'effect range (white star)'],
+    ['___NO_TRANSLATE___', 'effect range (blue star)'],
+    ['___NO_TRANSLATE___', 'maximum travel efficiency (red star)'],
   ],
-  RedStarExtender: [
-    // Life Extension
-  ],
+  RedStarExtender: [['TID_MODULE_RED_STAR_EXTENSION_STAT', 'LIFE EXTENSION']],
   Repair: [
-    // Effect Range
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Duration (Blue Star)
-    // HP Repair Rate
-    // HP Repair Rate (White Star)
-    // Total HP Repaired
-    // Total HP Repaired (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
+    ['___NO_TRANSLATE___', 'hp repair rate'],
+    ['___NO_TRANSLATE___', 'hp repair rate (white star)'],
+    ['___NO_TRANSLATE___', 'total hp repaired'],
+    ['___NO_TRANSLATE___', 'total hp repaired (blue star)'],
   ],
   TimeWarp: [
-    // Effect Range
-    // Real Time Effect Duration
-    // Listed Effect Duration
-    // Real Time Effect Duration (White Star)
-    // Listed Effect Duration (White Star)
-    // Time Factor
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['___NO_TRANSLATE___', 'real time effect duration'],
+    ['___NO_TRANSLATE___', 'listed effect duration'],
+    ['___NO_TRANSLATE___', 'real time effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'listed effect duration (white star)'],
+    ['TID_MODULE_TIME_WARP_STAT', 'TIME FACTOR'],
   ],
   Unity: [
-    // Damage Increase Per Player
-    // Effect Duration
-    // Effect Duration (White Star)
+    ['TID_MODULE_DESCR_UNITY', 'DAMAGE INCREASE PER PLAYER'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
   ],
   Sanctuary: [],
   Stealth: [
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   Fortify: [
-    // Damage Reduction
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_DAMAGE_REDUCTION_PCT', 'DAMAGE REDUCTION'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   Impulse: [
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   AlphaRocket: [
-    // Hull Strength
-    // Explosion Damage
-    // Explosion Range
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_PROJECTILE_DAMAGE', 'EXPLOSION DAMAGE'],
+    ['TID_MODULE_PROJECTILE_DAMAGERANGE', 'EXPLOSION RANGE'],
   ],
   Salvage: [
-    // Hull Repaired Per Destroyed Ship
-    // Hull Repaired Per Destroyed Ship (White Star)
+    ['TID_MODULE_SALVAGE_HULL_DESCR', 'HULL REPAIRED PER DESTROYED SHIP'],
+    ['___NO_TRANSLATE___', 'hull repaired per destroyed ship (white star)'],
   ],
   Supress: [
-    // Effect Range
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Range (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect range (blue star)'],
   ],
   Destiny: [
-    // Effect Range
-    // Area Damage
-    // Area Damage (White Star)
-    // Area Damage (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_AOE_STAT', 'AREA DAMAGE'],
+    ['___NO_TRANSLATE___', 'area damage (white star)'],
+    ['___NO_TRANSLATE___', 'area damage (blue star)'],
   ],
   Barrier: [
-    // Effect Range
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Range (Blue Star)
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'effect range (blue star)'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   Vengeance: [
-    // Hull Strength Threshold
-    // Effect Range
-    // Area Damage
-    // Area Damage (White Star)
-    // Area Damage (Blue Star)
+    ['TID_MODULE_HULL_THRESHOLD_STAT', 'HULL STRENGTH THRESHOLD'],
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_AOE_STAT', 'AREA DAMAGE'],
+    ['___NO_TRANSLATE___', 'area damage (white star)'],
+    ['___NO_TRANSLATE___', 'area damage (blue star)'],
   ],
   DeltaRocket: [
-    // Hull Strength
-    // Explosion Damage
-    // Explosion Range
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_PROJECTILE_DAMAGE', 'EXPLOSION DAMAGE'],
+    ['TID_MODULE_PROJECTILE_DAMAGERANGE', 'EXPLOSION RANGE'],
   ],
   Leap: [
-    // Activation Delay
-    // Activation Delay (White Star)
-    // Disable Time
-    // Disable Time (White Star)
+    ['TID_MODULE_ACTIVATION_PREP_TIME', 'ACTIVATION DELAY'],
+    ['___NO_TRANSLATE___', 'activation delay (white star)'],
+    ['TID_MODULE_LEAP_DISABLE_STAT', 'DISABLE TIME'],
+    ['___NO_TRANSLATE___', 'disable time (white star)'],
   ],
   Bond: [
-    // Effect Range
-    // Effect Duration
-    // Effect Duration (White Star)
-    // Effect Range
-    // Effect Duration (Blue Star)
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
+    ['___NO_TRANSLATE___', 'effect duration (white star)'],
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['___NO_TRANSLATE___', 'effect duration (blue star)'],
   ],
   AlphaDrone: [
-    // Damage Per Second
-    // Damage Per Hour (White Star)
-    // Hull Strength
+    ['TID_MODULE_DESCR_DPS', 'DAMAGE PER SECOND'],
+    ['TID_FLEET_DPM', 'DAMAGE PER SECOND'],
+    ['TID_CERBERUS_STATION_ATTACK_DAMAGE', 'DAMAGE PER SECOND'],
+    ['___NO_TRANSLATE___', 'damage per hour (white star)'],
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
   ],
   Suspend: [
-    // Effect Range
-    // Real Time Effect Duration
-    // Listed Effect Duration
-    // Real Time Effect Duration (White Star)
-    // Listed Effect Duration (White Star)
-    // Time Factor
+    ['TID_MODULE_EFFECT_RANGE_DESCR', 'EFFECT RANGE'],
+    ['___NO_TRANSLATE___', 'real time effect duration'],
+    ['___NO_TRANSLATE___', 'listed effect duration'],
+    ['___NO_TRANSLATE___', 'real time effect duration (white star)'],
+    ['___NO_TRANSLATE___', 'listed effect duration (white star)'],
+    ['TID_MODULE_TIME_WARP_STAT', 'TIME FACTOR'],
   ],
   OmegaRocket: [
-    // Hull Strength
-    // Explosion Damage
-    // Explosion Range
-    // Neutralized Damage
-    // Neutralized Damage Range
+    ['TID_FLEET_HULL_STRENGTH', 'HULL STRENGTH'],
+    ['TID_CERBERUS_STATION_HULL_LABEL', 'HULL STRENGTH'],
+    ['TID_MODULE_PROJECTILE_DAMAGE', 'EXPLOSION DAMAGE'],
+    ['TID_MODULE_PROJECTILE_DAMAGERANGE', 'EXPLOSION RANGE'],
+    ['TID_MODULE_SECONDARY_DAMAGE', 'NEUTRALIZED DAMAGE'],
+    ['TID_MODULE_SECONDARY_RANGE', 'NEUTRALIZED DAMAGE RANGE'],
   ],
 };
 
