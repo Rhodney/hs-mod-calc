@@ -278,10 +278,10 @@ function initModulesButtons(modulesDiv) {
     btn.addEventListener('click', () => {
       const moduleData = modulesData[moduleName];
       const state = modulesStore.getState();
-      const userSelect = state[moduleData.id];
+      const userSelect = state[moduleData.Name];
 
       modalStore.set(() => ({
-        moduleId: moduleData.id,
+        moduleId: moduleData.Name,
         currentLevel: userSelect.current,
         targetLevel: userSelect.target,
       }));

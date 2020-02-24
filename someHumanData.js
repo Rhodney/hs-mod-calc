@@ -111,6 +111,18 @@ const some = {
   RedStarLifeExtention: 'TID_MODULE_RED_STAR_EXTENSION_STAT',
 };
 
+/*
+
+// "TID_YELLOW_STAR","YELLOW STAR"
+// "TID_RED_STAR","RED STAR"
+// "TID_HOME_STAR","HOME STAR"
+
+"TID_WHITE_STAR","WHITE STAR"
+"TID_BLUE_STAR","BLUE STAR"
+
+
+*/
+
 const paramsNames = {
   Common: [
     ['___NO_TRANSLATE___', 'blueprints required'],
@@ -130,7 +142,10 @@ const paramsNames = {
     ['TID_MODULE_EFFECT_DURATION_DESCR', 'EFFECT DURATION'],
     ['TID_SHIP_UPGRADE_EFFECT_JOB_PAYOUT_INCREASE', 'SHIPMENT REWARD BONUS'],
   ],
-  Rush: [['___NO_TRANSLATE___', 'speed increase per shipment']],
+  Rush: [
+    ['TID_MODULE_RUSH_SPEED_INCR', 'SPEED INCREASE'],
+    ['TID_MODULE_RUSH_SPEED_INCR_VAL_PER_SHIPMENT', '+{0}% / SHIPMENT'],
+  ],
   TradeBurst: [
     ['TID_MODULE_TRADEBURST_THRESHOLD', 'THRESHOLD'],
     ['TID_SHIP_UPGRADE_EFFECT_BONUS_REWARD', 'BONUS REWARD'],

@@ -1,15 +1,23 @@
-import { modulesData } from './moduleData';
+import { modulesData, projectilesData, capitalShipsData } from './moduleData';
 
 export function getModulePrices(key) {
   const raw = modulesData[key].UnlockPrice;
 
-  return raw.map((price) => +price);
+  if (Array.isArray(raw)) {
+    return raw.map((price) => +price);
+  }
+
+  return [+raw];
 }
 
 export function getModuleTerms(key) {
   const raw = modulesData[key].UnlockTime;
 
-  return raw.map((time) => +time);
+  if (Array.isArray(raw)) {
+    return raw.map((time) => +time);
+  }
+
+  return [+raw];
 }
 
 export function getModuleParamLabel(key) {
@@ -81,20 +89,36 @@ export function getModuleParamLabel(key) {
 }
 
 export function getModuleName(key) {
-  return modulesData[key].engName;
+  return modulesData[key].eng.name;
 }
 
 export function getModuleLevelParams(key, level) {
+  const projectileKeys = {
+    AlphaRocket: 'Alpha',
+    DeltaRocket: 'Delta',
+    OmegaRocket: 'Omega',
+    DartLauncher: 'Dart',
+    HydroRocket: 'HydroRocket',
+  };
+
+  const droneKeys = {
+    MiningDrone: 'MiningDrone',
+    ShipmentDrone: 'ShipmentDrone',
+    AlphaDrone: 'AlphaDrone',
+  };
+
   const levelParams = {};
   const allModuleInfo = modulesData[key];
+  const rocketsInfo = projectilesData[projectileKeys[key]] || null;
+  const dronesInfo = capitalShipsData[droneKeys[key]] || null;
 
-  Object.keys(allModuleInfo)
-    .filter((paramKey) => Array.isArray(allModuleInfo[paramKey]))
-    .forEach((paramKey) => {
+  Object.entries({ ...dronesInfo, ...rocketsInfo, ...allModuleInfo })
+    .filter(([, paramValue]) => Array.isArray(paramValue))
+    .forEach(([paramKey, paramValue]) => {
       if (level === 0) {
         levelParams[paramKey] = 0;
       } else {
-        levelParams[paramKey] = allModuleInfo[paramKey][level - 1];
+        levelParams[paramKey] = paramValue[level - 1];
       }
     });
 
@@ -102,5 +126,9 @@ export function getModuleLevelParams(key, level) {
 }
 
 export function getModuleMaxLevel(key) {
-  return +modulesData[key].maxLevel;
+  if (Array.isArray(modulesData[key].UnlockBlueprints)) {
+    return modulesData[key].UnlockBlueprints.length;
+  }
+
+  return 1;
 }
