@@ -1,4 +1,5 @@
 import { modulesData, projectilesData, capitalShipsData } from './moduleData';
+import { stringifyTerm } from '../pages/utils';
 
 export function getModulePrices(key) {
   const raw = modulesData[key].UnlockPrice;
@@ -92,6 +93,41 @@ export function getModuleName(key) {
   return modulesData[key].eng.name;
 }
 
+function justNumber(paramName) {
+  return (moduleData, level) => {
+    if (level === 0) {
+      return 0;
+    }
+
+    return +moduleData[paramName][level - 1];
+  };
+}
+
+const UnlockBlueprints = createParam('Unlock blueprints', justNumber('UnlockBlueprints'));
+const ExtraTradeSlots = createParam('Extra trade slots', justNumber('ExtraTradeSlots'));
+const BCCost = createParam('Instal cost', justNumber('BCCost'), (val) => `${val} credits`);
+const ActivationDelay = createParam('Cooldown', justNumber('ActivationDelay'), stringifyTerm);
+const HP = createParam('HP', justNumber('HP'));
+const SpawnLifetime_WS = createParam(
+  'Lifetime WS',
+  justNumber('SpawnLifetime_WS'),
+  (_) => stringifyTerm((_ * 60 * 60) / 6) // sixHours
+);
+
+const ModuleParamsByName = {
+  TransportCapacity: createModuleParamsGetter('TransportCapacity')
+    .add(UnlockBlueprints)
+    .add(ExtraTradeSlots)
+    .add(BCCost),
+  Recall: createModuleParamsGetter('Recall'),
+  MiningDrone: createModuleParamsGetter('MiningDrone').add(HP),
+  ShipmentDrone: createModuleParamsGetter('ShipmentDrone') // ["UnlockBlueprints","ActivationDelay","SpawnLifetime","SpawnLifetime_WS","SpawnCapacity","DroneShipmentBonus","ActivationFuelCost","BCCost"]
+    .add(UnlockBlueprints)
+    .add(ActivationDelay)
+    .add(SpawnLifetime_WS)
+    .add(BCCost),
+};
+
 export function getModuleLevelParams(key, level) {
   const projectileKeys = {
     AlphaRocket: 'Alpha',
@@ -112,6 +148,16 @@ export function getModuleLevelParams(key, level) {
   const rocketsInfo = projectilesData[projectileKeys[key]] || null;
   const dronesInfo = capitalShipsData[droneKeys[key]] || null;
 
+  if (ModuleParamsByName[key]) {
+    const a = {
+      PARAMS: ModuleParamsByName[key].params({ ...dronesInfo, ...rocketsInfo, ...allModuleInfo }, level),
+    };
+
+    console.log(JSON.stringify(a, true, 2));
+  }
+
+  console.log({ ...dronesInfo, ...rocketsInfo, ...allModuleInfo });
+
   Object.entries({ ...dronesInfo, ...rocketsInfo, ...allModuleInfo })
     .filter(([, paramValue]) => Array.isArray(paramValue))
     .forEach(([paramKey, paramValue]) => {
@@ -122,6 +168,17 @@ export function getModuleLevelParams(key, level) {
       }
     });
 
+  const trash = ['UnlockPrice', 'UnlockTime', 'WhiteStarScore', 'FuelUseIncrease'];
+
+  console.log('-------------------------');
+  console.log(key);
+  console.log(levelParams);
+  console.log(
+    JSON.stringify(
+      Object.keys(levelParams).filter((key) => !trash.includes(key)) //
+    )
+  );
+
   return levelParams;
 }
 
@@ -131,4 +188,36 @@ export function getModuleMaxLevel(key) {
   }
 
   return 1;
+}
+
+function createParam(label, getter, format = (_) => `${_}`) {
+  return (moduleData, level) => {
+    return {
+      label,
+      value: getter(moduleData, level),
+      formatted: format(getter(moduleData, level)),
+    };
+  };
+}
+
+function createModuleParamsGetter(moduleId) {
+  let params = [];
+
+  let getter = {};
+
+  getter.add = function(getFunc) {
+    params.push(getFunc);
+    return getter;
+  };
+  getter.params = function(moduleData, level) {
+    let result = [];
+
+    params.forEach((getFunc) => {
+      result.push(getFunc(moduleData, level));
+    });
+
+    return result;
+  };
+
+  return getter;
 }

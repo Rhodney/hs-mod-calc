@@ -38,6 +38,9 @@ function main() {
   initShareLink();
   initModal2();
   initResetButton();
+  setTimeout(() => {
+    document.querySelector('.module[data-module-id="MiningDrone"]').click();
+  }, 100);
 }
 
 function initResetButton() {
