@@ -1,10 +1,10 @@
 extends ./layout.pug
 
 mixin module(data)
-  - var bg = "background-image: url('../img/modules/" + data.id + ".png')"
+  - var bg = "background-image: url('../img/modules/" + data.Name + ".png')"
   div.modules-pack__item
     button.module(
-      data-module-id=data.id,
+      data-module-id=data.Name,
       data-current-l=0,
       data-target-l=0,
     )= data.name

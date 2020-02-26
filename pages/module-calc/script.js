@@ -39,7 +39,7 @@ function main() {
   initModal2();
   initResetButton();
   setTimeout(() => {
-    document.querySelector('.module[data-module-id="MiningDrone"]').click();
+    document.querySelector('.module[data-module-id="Salvage"]').click();
   }, 100);
 }
 
