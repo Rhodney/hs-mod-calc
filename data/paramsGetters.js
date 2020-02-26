@@ -1,22 +1,23 @@
 import { stringifyTerm } from '../pages/utils';
+import Result from 'result-js';
+
+Result.registerGlobals();
 
 function justNumber(paramName) {
   return (moduleData, level) => {
-    if (!(paramName in moduleData)) {
-      return;
-    }
+    return isIn(paramName, moduleData)
+      .andThen((paramData) => {
+        if (level === 0) {
+          return 0;
+        }
 
-    const params = moduleData[paramName];
+        if (Array.isArray(paramData)) {
+          return +paramData[level - 1];
+        }
 
-    if (level === 0) {
-      return 0;
-    }
-
-    if (Array.isArray(params)) {
-      return +moduleData[paramName][level - 1];
-    }
-
-    return +params;
+        return +paramData;
+      })
+      .mapErr(({ key }) => key);
   };
 }
 
@@ -29,24 +30,32 @@ const HP = createParam('HP', justNumber('HP'));
 const SalvageHullPercentRS = createParam(
   'Salvage Hull Percent (RS + BS)',
   (moduleData, level) => {
-    if (level === 0) {
-      return 0;
-    }
+    return isIn('SalvageHullPercent', moduleData)
+      .andThen((paramData) => {
+        if (level === 0) {
+          return 0;
+        }
 
-    let [rsValue] = moduleData.SalvageHullPercent[level - 1].split('!');
-    return +rsValue;
+        let [rsValue] = paramData[level - 1].split('!');
+        return +rsValue;
+      })
+      .mapErr(({ key }) => key);
   },
   (val) => `${val}%`
 );
 const SalvageHullPercentWS = createParam(
   'Salvage Hull Percent (WS)',
   (moduleData, level) => {
-    if (level === 0) {
-      return 0;
-    }
+    return isIn('SalvageHullPercent', moduleData)
+      .andThen((paramData) => {
+        if (level === 0) {
+          return 0;
+        }
 
-    let [, wsValue] = moduleData.SalvageHullPercent[level - 1].split('!');
-    return +wsValue;
+        let [, wsValue] = paramData[level - 1].split('!');
+        return +wsValue;
+      })
+      .mapErr(({ key }) => key);
   },
   (val) => `${val}%`
 );
@@ -69,6 +78,7 @@ export const ModuleParamsByName = {
   ShipmentDrone: createModuleParamsGetter('ShipmentDrone') // ["UnlockBlueprints","ActivationDelay","SpawnLifetime","SpawnLifetime_WS","SpawnCapacity","DroneShipmentBonus","ActivationFuelCost","BCCost"]
     .add(UnlockBlueprints)
     .add(ActivationDelay)
+    .add(SalvageHullPercentRS) // его нет
     .add(SpawnLifetime_WS)
     .add(BCCost),
   Salvage: createModuleParamsGetter('Salvage')
@@ -80,18 +90,13 @@ export const ModuleParamsByName = {
 
 function createParam(label, getter, format = (_) => `${_}`) {
   return (moduleData, level) => {
-    let value = getter(moduleData, level);
-
-    if (value == null) {
-      console.warn(`Module ${moduleData.Name} does not have some param`);
-      return;
-    }
-
-    return {
-      label,
-      value,
-      formatted: format(value),
-    };
+    return getter(moduleData, level).andThen((value) => {
+      return {
+        label,
+        value,
+        formatted: format(value),
+      };
+    });
   };
 }
 
@@ -102,10 +107,13 @@ function createModuleParamsGetter(moduleId) {
     let result = [];
 
     params.forEach((getFunc) => {
-      let moduleParamInfo = getFunc(moduleData, level);
-      if (moduleParamInfo) {
-        result.push(moduleParamInfo);
-      }
+      getFunc(moduleData, level)
+        .andThen((moduleParamInfo) => {
+          result.push(moduleParamInfo);
+        })
+        .orElse((err) => {
+          console.warn(`Param "${err}" is not found in module "${moduleId}"`);
+        });
     });
 
     return result;
@@ -117,4 +125,12 @@ function createModuleParamsGetter(moduleId) {
   };
 
   return getterParams;
+}
+
+function isIn(key, obj) {
+  if (key in obj) {
+    return Ok(obj[key]);
+  }
+
+  return Err({ key, obj });
 }
