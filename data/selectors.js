@@ -1,4 +1,4 @@
-import { modulesData, projectilesData, capitalShipsData } from './moduleData';
+import { modulesData, projectilesData, capitalShipsData, allModuleKeys } from './moduleData';
 import { ModuleParamsByName } from './paramsGetters';
 
 export function getModulePrices(key) {
@@ -92,6 +92,17 @@ export function getModuleParamLabel(key) {
 export function getModuleName(key) {
   return modulesData[key].eng.name;
 }
+let ttt = '';
+const setOfNnArrayVals = new Set();
+
+setTimeout(() => {
+  allModuleKeys.forEach((key) => {
+    getModuleLevelParams(key, 2);
+  });
+  console.log(ttt);
+  console.log(Array.from(setOfNnArrayVals).join(', '));
+});
+
 
 export function getModuleLevelParams(key, level) {
   const projectileKeys = {
@@ -115,36 +126,101 @@ export function getModuleLevelParams(key, level) {
 
   let allModuleInfo = { ...dronesInfo, ...rocketsInfo, ...moduleInfo };
 
-  if (ModuleParamsByName[key]) {
-    const a = {
-      MODULE: key,
-      PARAMS: ModuleParamsByName[key]({ ...dronesInfo, ...rocketsInfo, ...moduleInfo }, level),
-    };
-    console.log(JSON.stringify(a, true, 2));
-  }
+  // Object.entries(allModuleInfo)
+  //   .filter(([, paramValue]) => Array.isArray(paramValue))
+  //   .forEach(([paramKey, paramValue]) => {
+  //     if (level === 0) {
+  //       levelParams[paramKey] = 0;
+  //     } else {
+  //       levelParams[paramKey] = paramValue[level - 1];
+  //     }
+  //   });
 
-  console.log(allModuleInfo);
+  const trash = [
+    'UnlockPrice',
+    'UnlockTime',
+    'WhiteStarScore',
+    'BSScore',
 
-  Object.entries(allModuleInfo)
-    .filter(([, paramValue]) => Array.isArray(paramValue))
-    .forEach(([paramKey, paramValue]) => {
-      if (level === 0) {
-        levelParams[paramKey] = 0;
-      } else {
-        levelParams[paramKey] = paramValue[level - 1];
-      }
-    });
+    'Name',
+    'TID',
+    'TID_Description',
+    'TID_INFO_SCREEN',
+    'TID_INFO_SCREEN',
+    'ConceptImage',
+    'Model',
+    'MaxDisplayLevels',
+    'ModelScale',
+    'IsCombatShip',
+    'IsDrone',
+    'CanBeBuilt',
+    'NewModuleSlots',
+    'BuildCost',
+    'DesignUpgradeCost',
+    'BuildCost',
+    'DesignUpgradeCost',
+    'DesignUpgradeTime',
+    'RequiredPlanetLevel',
+    'InitialModule',
+    'InitialModuleLevels',
+    'BSPenaltyPerSec',
+    'HideModulesOnHUD',
+    'eng',
+    'JobCapacity',
+    'ShipAIHandler',
+    'AIUpdateIntervalSeconds',
+    'MaxPerStarSystem',
+    'AwardLevel',
+    'Icon',
+    'SlotType',
+    'ActivationType',
+    'ClientActivationFx',
+    'ScaleEffectsWithZoom',
+    'ScaleEffectsWithZoom',
+    'SpawnedShip',
+    'AllowedStarTypes',
+    'ShowWSInfo',
+    'ShowBSInfo',
+    'SustainedFX',
+    'IsTaunt',
+    'BSOnly',
+    'HideSelection',
+    'IsStealth',
 
-  const trash = ['UnlockPrice', 'UnlockTime', 'WhiteStarScore', 'BSScore'];
+    // common
+    'UnlockBlueprints',
+    'FuelUseIncrease',
+    'BCCost',
 
-  console.log('-------------------------');
-  console.log(key);
-  console.log(levelParams);
-  console.log(
-    JSON.stringify(
-      Object.keys(levelParams).filter((key) => !trash.includes(key)) //
-    )
-  );
+    /////////////////////////////////
+    /// VALID
+    /////////////////////////////////
+  ];
+
+  /*
+
+HP, Speed, ActivateFX, SwapLoadWithOtherTransport, DeactivateOnJump, ActivationDelay, TeleportToTradeStation, ActivationFuelCost, MineAllInSector, PreventUseOnWsJumpgate, AdditionalWaypoint, ImpactFX, DestroyedFX, LaunchFX, InitialBlueprints, ActivationHydroOnBoard, WeaponEffectType, WeaponFx, DoNotAward, EffectRadius, DPS, MaxDPSTime, MaxDPSTime_BS, StopCountdownOnDisable, ShieldRegenDelay, TimeToFullyRegen, IsAreaShield, IsAOEOnlyShield, IsEMP, ActivationPrep, ActivationPrepWS, ActivationPrepBS, IsTeleport, ActivateFXStaysInPlace, JumpToSafety, IsSupress, DisableActivationDuringPrep, TeleportToRandomSector, ReqEnemyShipsInSector, IsBarrier, AutoActivateHealth, TeleportToClosestCombat, PullShips, MinPublicRSLevel, Hide
+*/
+
+  // console.log(key);
+  // console.log(allModuleInfo);
+  //   MiningDrone: moduleParamsTable('MiningDrone', withCommon([HP])),
+
+  const params = Object.entries(allModuleInfo).forEach(([key, value]) => {
+    if (!Array.isArray(value) && !trash.includes(key)) {
+      setOfNnArrayVals.add(key);
+    }
+  }); //
+
+  ttt += `${key}: moduleParamsTable('${key}', withCommon([${params}])),\n`;
+
+  // if (ModuleParamsByName[key]) {
+  //   const a = {
+  //     MODULE: key,
+  //     PARAMS: ModuleParamsByName[key]({ ...dronesInfo, ...rocketsInfo, ...moduleInfo }, level),
+  //   };
+  //   console.log(JSON.stringify(a, true, 2));
+  // }
 
   return levelParams;
 }

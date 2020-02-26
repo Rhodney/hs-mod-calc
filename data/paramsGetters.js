@@ -3,30 +3,24 @@ import Result from 'result-js';
 
 Result.registerGlobals();
 
-function justNumber(paramName) {
+function arrayOfNumber(paramName) {
   return (moduleData, level) => {
-    return isIn(paramName, moduleData)
-      .andThen((paramData) => {
-        if (level === 0) {
-          return 0;
-        }
-
-        if (Array.isArray(paramData)) {
-          return +paramData[level - 1];
-        }
-
-        return +paramData;
-      })
-      .mapErr(({ key }) => key);
+    return isIn(paramName, moduleData).andThen((paramData) => +paramData[level - 1]);
   };
 }
 
-const UnlockBlueprints = createParam('Unlock blueprints', justNumber('UnlockBlueprints'));
-const FuelUseIncrease = createParam('FuelUse increase', justNumber('FuelUseIncrease'));
-const ExtraTradeSlots = createParam('Extra trade slots', justNumber('ExtraTradeSlots'));
-const BCCost = createParam('Instal cost', justNumber('BCCost'), (val) => `${val} credits`);
-const ActivationDelay = createParam('Cooldown', justNumber('ActivationDelay'), stringifyTerm);
-const HP = createParam('HP', justNumber('HP'));
+function singleNumber(paramName) {
+  return (moduleData) => {
+    return isIn(paramName, moduleData).andThen((paramData) => +paramData);
+  };
+}
+
+const UnlockBlueprints = createParam('Unlock blueprints', arrayOfNumber('UnlockBlueprints'));
+const FuelUseIncrease = createParam('FuelUse increase', arrayOfNumber('FuelUseIncrease'));
+const ExtraTradeSlots = createParam('Extra trade slots', arrayOfNumber('ExtraTradeSlots'));
+const BCCost = createParam('Instal cost', arrayOfNumber('BCCost'), (val) => `${val} credits`);
+const ActivationDelay = createParam('Cooldown', arrayOfNumber('ActivationDelay'), stringifyTerm);
+const HP = createParam('HP', arrayOfNumber('HP'));
 const SalvageHullPercentRS = createParam(
   'Salvage Hull Percent (RS + BS)',
   (moduleData, level) => {
@@ -61,31 +55,230 @@ const SalvageHullPercentWS = createParam(
 );
 const SpawnLifetime_WS = createParam(
   'Lifetime WS',
-  justNumber('SpawnLifetime_WS'),
+  arrayOfNumber('SpawnLifetime_WS'),
   (_) => stringifyTerm((_ * 60 * 60) / 6) // sixHours
 );
 
+function withCommon(specific) {
+  return [UnlockBlueprints, ...specific, FuelUseIncrease, BCCost];
+}
 export const ModuleParamsByName = {
-  TransportCapacity: createModuleParamsGetter('TransportCapacity')
-    .add(UnlockBlueprints)
-    .add(ExtraTradeSlots)
-    .add(FuelUseIncrease)
-    .add(HP) // его нет
-    .add(BCCost),
-  Recall: createModuleParamsGetter('Recall'),
-  MiningDrone: createModuleParamsGetter('MiningDrone').add(HP),
-  Sanctuary: createModuleParamsGetter('Sanctuary').add(UnlockBlueprints),
-  ShipmentDrone: createModuleParamsGetter('ShipmentDrone') // ["UnlockBlueprints","ActivationDelay","SpawnLifetime","SpawnLifetime_WS","SpawnCapacity","DroneShipmentBonus","ActivationFuelCost","BCCost"]
-    .add(UnlockBlueprints)
-    .add(ActivationDelay)
-    .add(SalvageHullPercentRS) // его нет
-    .add(SpawnLifetime_WS)
-    .add(BCCost),
-  Salvage: createModuleParamsGetter('Salvage')
-    .add(UnlockBlueprints)
-    .add(SalvageHullPercentRS)
-    .add(SalvageHullPercentWS)
-    .add(BCCost),
+  // TransportCapacity: moduleParamsTable('TransportCapacity', withCommon([ExtraTradeSlots])),
+  // ShipmentComputer: moduleParamsTable('ShipmentComputer', withCommon([WaypointShipmentRewardBonus])),
+  // Trader: moduleParamsTable(
+  //   'Trader',
+  //   withCommon([ActivationDelay, EffectDurationx10, JobPayoutIncreasePercent, ActivationFuelCost])
+  // ),
+  // Rush: moduleParamsTable('Rush', withCommon([SpeedIncreasePerShipment])),
+  // TradeBurst: moduleParamsTable(
+  //   'TradeBurst',
+  //   withCommon([
+  //     ActivationDelay,
+  //     EffectDurationx10,
+  //     TradeBurstShipmentsStart,
+  //     TradeBurstShipmentBonus,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // ShipmentDrone: moduleParamsTable(
+  //   'ShipmentDrone',
+  //   withCommon([
+  //     ActivationDelay,
+  //     SpawnLifetime,
+  //     SpawnLifetime_WS,
+  //     SpawnCapacity,
+  //     DroneShipmentBonus,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // Offload: moduleParamsTable(
+  //   'Offload',
+  //   withCommon([ActivationDelay, EffectDurationx10, TradeStationDeliverReward, ActivationFuelCost])
+  // ),
+  // ShipmentBeam: moduleParamsTable('ShipmentBeam', withCommon([ActivationDelay, TeleportShipments, ActivationFuelCost])),
+  // Entrust: moduleParamsTable('Entrust', withCommon([ActivationDelay, EffectRadius, ActivationFuelCost])),
+  // Dispatch: moduleParamsTable('Dispatch', withCommon([APTPIOTTP, ActivationDelay, ActivationFuelCost])),
+  // Recall: moduleParamsTable('Recall', withCommon([])),
+  // MiningBoost: moduleParamsTable(
+  //   'MiningBoost',
+  //   withCommon([ActivationDelay, EffectDurationx10, MiningSpeedModifierPct, ActivationFuelCost])
+  // ),
+  // MineralStorageCapacity: moduleParamsTable('MineralStorageCapacity', withCommon([ExtraMineralStorage])),
+  // Enrich: moduleParamsTable('Enrich', withCommon([ActivationDelay, IncreaseSectorHydroPct])),
+  // MassMining: moduleParamsTable('MassMining', withCommon([MiningSpeedModifierPct])),
+  // HydrogenUpload: moduleParamsTable('HydrogenUpload', withCommon([ActivationDelay, HydroUploadPct])),
+  // MiningUnity: moduleParamsTable(
+  //   'MiningUnity',
+  //   withCommon([ActivationDelay, EffectDurationx10, UnityBoostPercent, ActivationFuelCost])
+  // ),
+  // Crunch: moduleParamsTable('Crunch', withCommon([ActivationDelay, InstantHydrogenCollected])),
+  // Genesis: moduleParamsTable('Genesis', withCommon([ActivationDelay, MaxNewAsteroids, HydroPerNewAsteroid])),
+  // HydroRocket: moduleParamsTable('HydroRocket', withCommon([HP, Damage, DamageRange, ActivationDelay])),
+  // MiningDrone: moduleParamsTable(
+  //   'MiningDrone',
+  //   withCommon([
+  //     HP,
+  //     HydrogenCapacity,
+  //     MiningPeriod,
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     EffectRadiusWS,
+  //     SpawnLifetime,
+  //     SpawnLifetime_WS,
+  //   ])
+  // ),
+  // WeakBattery: moduleParamsTable('WeakBattery', withCommon([])),
+  // Battery: moduleParamsTable('Battery', withCommon([EffectRadius, DPS])),
+  // Laser: moduleParamsTable('Laser', withCommon([EffectRadius, DPS, MaxDPS])),
+  // MassBattery: moduleParamsTable('MassBattery', withCommon([EffectRadius, DPS, MaxTargets])),
+  // DualLaser: moduleParamsTable('DualLaser', withCommon([EffectRadius, DPS, MaxDPS, MaxTargets])),
+  // Barrage: moduleParamsTable('Barrage', withCommon([EffectRadius, DPS, AdditionalDPSPerTargetInRange])),
+  // DartLauncher: moduleParamsTable('DartLauncher', withCommon([HP, Damage, DamageRange, ActivationDelay, EffectRadius])),
+  // WeakShield: moduleParamsTable(
+  //   'WeakShield',
+  //   withCommon([ActivationDelay, EffectDurationx10, ShieldStrength, ActivationFuelCost])
+  // ),
+  // StandardShield: moduleParamsTable(
+  //   'StandardShield',
+  //   withCommon([ActivationDelay, SpeedIncrDuringActivation, EffectDurationx10, ShieldStrength, ActivationFuelCost])
+  // ),
+  // PassiveShield: moduleParamsTable('PassiveShield', withCommon([ShieldStrength])),
+  // StrongShield: moduleParamsTable(
+  //   'StrongShield',
+  //   withCommon([ActivationDelay, EffectDurationx10, ShieldStrength, ActivationFuelCost])
+  // ),
+  // MirrorShield: moduleParamsTable(
+  //   'MirrorShield',
+  //   withCommon([ActivationDelay, EffectDurationx10, ShieldStrength, MirrorDamagePct, ActivationFuelCost])
+  // ),
+  // BlastShield: moduleParamsTable(
+  //   'BlastShield',
+  //   withCommon([ActivationDelay, EffectRadius, EffectDurationx10, ShieldStrength, ActivationFuelCost])
+  // ),
+  // AreaShield: moduleParamsTable(
+  //   'AreaShield',
+  //   withCommon([ActivationDelay, EffectRadius, EffectDurationx10, ShieldStrength, ActivationFuelCost])
+  // ),
+  // EMP: moduleParamsTable(
+  //   'EMP',
+  //   withCommon([ActivationDelay, EffectRadius, EffectDurationx10, EffectDurationx10BS, ActivationFuelCost])
+  // ),
+  // Teleport: moduleParamsTable(
+  //   'Teleport',
+  //   withCommon([ActivationDelay, EffectRadius, EffectRadiusWS, EffectRadiusBS, ActivationFuelCost])
+  // ),
+  // RedStarExtender: moduleParamsTable(
+  //   'RedStarExtender',
+  //   withCommon([ActivationDelay, EffectRadius, RedStarLifeExtention, ActivationFuelCost])
+  // ),
+  // Repair: moduleParamsTable(
+  //   'Repair',
+  //   withCommon([
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     EffectDurationx10,
+  //     EffectDurationx10BS,
+  //     RepairHullPointsPerSecond,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // TimeWarp: moduleParamsTable(
+  //   'TimeWarp',
+  //   withCommon([ActivationDelay, EffectRadius, EffectDurationx10, TimeWarpFactor, ActivationFuelCost])
+  // ),
+  // Unity: moduleParamsTable(
+  //   'Unity',
+  //   withCommon([ActivationDelay, EffectDurationx10, UnityBoostPercent, ActivationFuelCost])
+  // ),
+  // Sanctuary: moduleParamsTable('Sanctuary', withCommon([])),
+  // Stealth: moduleParamsTable(
+  //   'Stealth',
+  //   withCommon([ActivationDelay, EffectDurationx10, EffectDurationx10WS, EffectDurationx10BS, ActivationFuelCost])
+  // ),
+  // Fortify: moduleParamsTable(
+  //   'Fortify',
+  //   withCommon([ActivationDelay, EffectDurationx10, EffectDurationx10BS, DamageReductionPct, ActivationFuelCost])
+  // ),
+  // Impulse: moduleParamsTable(
+  //   'Impulse',
+  //   withCommon([ActivationDelay, EffectDurationx10, EffectDurationx10BS, MaxImpulse, ActivationFuelCost])
+  // ),
+  // AlphaRocket: moduleParamsTable(
+  //   'AlphaRocket',
+  //   withCommon([HP, Damage, DamageRange, ActivationDelay, ActivationFuelCost])
+  // ),
+  // Salvage: moduleParamsTable('Salvage', withCommon([SalvageHullPercent])),
+  // Supress: moduleParamsTable(
+  //   'Supress',
+  //   withCommon([
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     EffectRadiusBS,
+  //     EffectDurationx10,
+  //     EffectDurationx10WS,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // Destiny: moduleParamsTable(
+  //   'Destiny',
+  //   withCommon([ActivationDelay, EffectRadius, AOEDamage, AOEDamage_WS, AOEDamage_BS, ActivationFuelCost])
+  // ),
+  // Barrier: moduleParamsTable(
+  //   'Barrier',
+  //   withCommon([
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     EffectRadiusBS,
+  //     EffectDurationx10,
+  //     EffectDurationx10BS,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // Vengeance: moduleParamsTable(
+  //   'Vengeance',
+  //   withCommon([ActivationDelay, EffectRadius, EffectRadiusWS, AOEDamage, AOEDamage_WS, AOEDamage_BS])
+  // ),
+  // DeltaRocket: moduleParamsTable(
+  //   'DeltaRocket',
+  //   withCommon([HP, Damage, DamageRange, ActivationDelay, ActivationFuelCost])
+  // ),
+  // Leap: moduleParamsTable(
+  //   'Leap',
+  //   withCommon([ActivationPrepWS, ActivationDelay, EffectDurationx10, ActivationFuelCost])
+  // ),
+  // Bond: moduleParamsTable(
+  //   'Bond',
+  //   withCommon([
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     EffectRadiusWS,
+  //     EffectRadiusBS,
+  //     EffectDurationx10,
+  //     EffectDurationx10BS,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
+  // AlphaDrone: moduleParamsTable(
+  //   'AlphaDrone',
+  //   withCommon([HP, ActivationDelay, SpawnLifetime, SpawnLifetime_WS, ActivationFuelCost])
+  // ),
+  // Suspend: moduleParamsTable(
+  //   'Suspend',
+  //   withCommon([ActivationDelay, EffectRadius, EffectDurationx10, TimeWarpFactor, ActivationFuelCost])
+  // ),
+  // OmegaRocket: moduleParamsTable(
+  //   'OmegaRocket',
+  //   withCommon([
+  //     HP,
+  //     Damage,
+  //     DamageWhenNeutralized,
+  //     DamageRange,
+  //     DamageRangeWhenNeutralized,
+  //     ActivationDelay,
+  //     EffectRadius,
+  //     ActivationFuelCost,
+  //   ])
+  // ),
 };
 
 function createParam(label, getter, format = (_) => `${_}`) {
@@ -100,7 +293,7 @@ function createParam(label, getter, format = (_) => `${_}`) {
   };
 }
 
-function createModuleParamsGetter(moduleId) {
+function moduleParamsTable(moduleId) {
   let params = [];
 
   function getterParams(moduleData, level) {
@@ -111,8 +304,8 @@ function createModuleParamsGetter(moduleId) {
         .andThen((moduleParamInfo) => {
           result.push(moduleParamInfo);
         })
-        .orElse((err) => {
-          console.warn(`Param "${err}" is not found in module "${moduleId}"`);
+        .orElse(({ key }) => {
+          console.warn(`Param "${key}" is not found in module "${moduleId}"`);
         });
     });
 

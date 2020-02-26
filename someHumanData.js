@@ -60,7 +60,7 @@ var modulesByTypes = {
   weapon: ['WeakBattery', 'Battery', 'Laser', 'MassBattery', 'DualLaser', 'Barrage', 'DartLauncher'],
 };
 
-const some = {
+const someTranslates = {
   ExtraTradeSlots: 'TID_SHIP_UPGRADE_EFFECT_TRADE_SLOTS',
   FuelUseIncrease: 'TID_SHIP_UPGRADE_EFFECT_FUEL_INCREASE',
   BCCost: 'TID_MODULE_INSTALL_PRICE_STAT',
@@ -119,7 +119,6 @@ const some = {
 
 "TID_WHITE_STAR","WHITE STAR"
 "TID_BLUE_STAR","BLUE STAR"
-
 
 */
 
@@ -441,4 +440,5 @@ const paramsNames = {
 
 module.exports = {
   modulesByTypes,
+  someTranslates,
 };
